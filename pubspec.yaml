@@ -1,5 +1,5 @@
 name: gtfs_bindings
-description: A wrapper package around GTFS Schedule datasets.
+description: A utility package to read the contents of a GTFS Schedule dataset.
 version: 0.1.0
 repository: https://github.com/helomri/gtfs_bindings
 issue_tracker: https://github.com/helomri/gtfs_bindings/issues

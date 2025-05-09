@@ -217,11 +217,12 @@ abstract class SingleCsvLazyBinding<T> extends LazyBinding<T> {
         .map(
           (e) => fieldDefinitions.firstWhere(
             (element) => element.name == e,
-            orElse: () => FieldDefinition<Object>(
-              e ?? 'unnamed_field',
-              (dataset, header, records) => null,
-              type: TextFieldType(),
-            ),
+            orElse:
+                () => FieldDefinition<Object>(
+                  e ?? 'unnamed_field',
+                  (dataset, header, records) => null,
+                  type: TextFieldType(),
+                ),
           ),
         )
         .toList(growable: false);
@@ -244,23 +245,25 @@ abstract class SingleCsvLazyBinding<T> extends LazyBinding<T> {
       return;
     }
 
-    final stream = streamRecordsThroughFile(
-      resourceFile,
-      fieldDefinitions,
-      criteria,
-      cancellationSignal: cancellationSignal,
-    ).asBroadcastStream();
+    final stream =
+        streamRecordsThroughFile(
+          resourceFile,
+          fieldDefinitions,
+          criteria,
+          cancellationSignal: cancellationSignal,
+        ).asBroadcastStream();
     final rawHeader = await stream.first;
 
     final header = rawHeader
         .map(
           (e) => fieldDefinitions.firstWhere(
             (element) => element.name == e,
-            orElse: () => FieldDefinition<Object>(
-              e ?? 'unnamed_field',
-              (dataset, header, records) => null,
-              type: TextFieldType(),
-            ),
+            orElse:
+                () => FieldDefinition<Object>(
+                  e ?? 'unnamed_field',
+                  (dataset, header, records) => null,
+                  type: TextFieldType(),
+                ),
           ),
         )
         .toList(growable: false);
@@ -319,13 +322,14 @@ abstract class SingleCsvLazyBinding<T> extends LazyBinding<T> {
       return data!.filterThroughCriteria(criteria);
     }
 
-    final stream = streamRecordsThroughFile(
-      resourceFile,
-      fieldDefinitions,
-      criteria,
-      doValidationChecks: doValidationChecks,
-      dataset: dataset,
-    ).asBroadcastStream();
+    final stream =
+        streamRecordsThroughFile(
+          resourceFile,
+          fieldDefinitions,
+          criteria,
+          doValidationChecks: doValidationChecks,
+          dataset: dataset,
+        ).asBroadcastStream();
 
     final rawHeader = await stream.first;
 
@@ -333,11 +337,12 @@ abstract class SingleCsvLazyBinding<T> extends LazyBinding<T> {
         .map(
           (e) => fieldDefinitions.firstWhere(
             (element) => element.name == e,
-            orElse: () => FieldDefinition<Object>(
-              e ?? 'unnamed_field',
-              (dataset, header, records) => null,
-              type: TextFieldType(),
-            ),
+            orElse:
+                () => FieldDefinition<Object>(
+                  e ?? 'unnamed_field',
+                  (dataset, header, records) => null,
+                  type: TextFieldType(),
+                ),
           ),
         )
         .toList(growable: false);

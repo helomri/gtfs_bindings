@@ -235,9 +235,10 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
       (dataset, header, records) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
-        final timepoint = record.containsKey('timepoint')
-            ? int.parse(record['timepoint']!)
-            : null;
+        final timepoint =
+            record.containsKey('timepoint')
+                ? int.parse(record['timepoint']!)
+                : null;
         if (timepoint == 1) {
           return true;
         }
@@ -255,9 +256,10 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
       (dataset, header, records) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
-        final timepoint = record.containsKey('timepoint')
-            ? int.parse(record['timepoint']!)
-            : null;
+        final timepoint =
+            record.containsKey('timepoint')
+                ? int.parse(record['timepoint']!)
+                : null;
         if (timepoint == 1) {
           return true;
         }
@@ -273,28 +275,31 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
       'stop_id',
       (dataset, header, records) => null,
       type: const IdFieldType(displayName: 'Stop ID'),
-      shouldBeRequired: (dataset, header, record) =>
-          !record.containsKey('location_group_id') &&
-          !record.containsKey('location_id'),
+      shouldBeRequired:
+          (dataset, header, record) =>
+              !record.containsKey('location_group_id') &&
+              !record.containsKey('location_id'),
     ),
     FieldDefinition(
       'location_group_id',
       (dataset, header, records) => null,
       type: const IdFieldType(displayName: 'Location group ID'),
-      shouldBeRequired: (dataset, header, record) =>
-          record.containsKey('stop_id') || record.containsKey('location_id')
-          ? false
-          : null,
+      shouldBeRequired:
+          (dataset, header, record) =>
+              record.containsKey('stop_id') || record.containsKey('location_id')
+                  ? false
+                  : null,
     ),
     FieldDefinition(
       'location_id',
       (dataset, header, records) => null,
       type: const IdFieldType(displayName: 'Location ID'),
-      shouldBeRequired: (dataset, header, record) =>
-          record.containsKey('stop_id') ||
-              record.containsKey('location_group_id')
-          ? false
-          : null,
+      shouldBeRequired:
+          (dataset, header, record) =>
+              record.containsKey('stop_id') ||
+                      record.containsKey('location_group_id')
+                  ? false
+                  : null,
     ),
     FieldDefinition(
       'stop_sequence',
