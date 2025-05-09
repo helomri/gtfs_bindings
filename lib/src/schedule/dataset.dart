@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:gtfs_bindings/schedule.dart';
-import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/csv_parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/agency.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/calendar.dart';

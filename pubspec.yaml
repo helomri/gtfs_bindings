@@ -1,9 +1,15 @@
 name: gtfs_bindings
 description: A wrapper package around GTFS Schedule datasets.
 version: 0.1.0
+repository: https://github.com/helomri/gtfs_bindings
+issue_tracker: https://github.com/helomri/gtfs_bindings/issues
+topics:
+  - gtfs
+  - parser
+  - wrapper
 
 environment:
-  sdk: ^3.9.0-63.0.dev
+  sdk: ^3.7.0
 
 dependencies:
   archive: ^4.0.2
