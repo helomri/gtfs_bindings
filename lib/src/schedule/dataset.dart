@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:gtfs_bindings/schedule.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
@@ -23,7 +22,7 @@ abstract class GtfsDataset {
 
   late List<String> fileNameList;
 
-  FutureOr<List<FileOpener>> getSource({Directory? tempDir});
+  FutureOr<List<FileOpener>> getSource({String? tempDir});
 
   static final _logger = Logger('GtfsBinding.DatasetPiper');
 
@@ -77,7 +76,7 @@ abstract class GtfsDataset {
     CalendarParser(),
   ];
 
-  Future<GtfsDataset> pipe({Directory? tempDir}) async {
+  Future<GtfsDataset> pipe({String? tempDir}) async {
     final dataset = await getSource(tempDir: tempDir);
 
     GtfsDataset currentDataset = this;

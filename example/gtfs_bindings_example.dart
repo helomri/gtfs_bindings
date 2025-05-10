@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:gtfs_bindings/schedule.dart';
 
 Future<void> main() async {
@@ -11,7 +9,7 @@ Future<void> main() async {
     ),
   );
   await dataset.pipe(
-    tempDir: Directory('/tmp'),
+    tempDir: '/tmp',
   ); // Preferably use path_provider's getTemporaryDirectory
   await dataset.populateList(dataset.bindings);
   print('${await dataset.routes.count()} routes were counted');

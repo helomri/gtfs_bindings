@@ -13,8 +13,11 @@ export 'src/schedule/binding/bindings/trips.dart';
 export 'src/schedule/binding/helpers/lazy_binding.dart';
 export 'src/schedule/dataset.dart';
 export 'src/schedule/dataset_types/archive.dart';
-export 'src/schedule/dataset_types/directory.dart';
-export 'src/schedule/dataset_types/downloadable.dart';
+export 'src/schedule/dataset_types/directory.dart'
+    if (dart.library.io) 'src/schedule/dataset_types/directory.dart';
+export 'src/schedule/dataset_types/downloadable.dart'
+    if (dart.library.io) 'src/schedule/dataset_types/downloadable_io.dart'
+    if (dart.library.js_interop) 'src/schedule/dataset_types/downloadable_html.dart';
 export 'src/schedule/dataset_types/raw.dart';
 export 'src/schedule/parsing/helpers/csv/csv_parser.dart';
 export 'src/schedule/parsing/helpers/csv/field_definition.dart';

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:gtfs_bindings/src/schedule/dataset.dart';
@@ -11,7 +10,7 @@ class ArchiveDataset extends GtfsDataset {
   ArchiveDataset({required this.archive});
 
   @override
-  FutureOr<List<FileOpener>> getSource({Directory? tempDir}) => archive
+  FutureOr<List<FileOpener>> getSource({String? tempDir}) => archive
       .map(
         (e) => (
           stream: () => Stream.value(e.getContent()!.toUint8List().cast<int>()),
