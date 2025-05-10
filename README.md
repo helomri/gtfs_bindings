@@ -4,47 +4,47 @@ A utility package to read the contents of a GTFS Schedule dataset.
 
 - GTFS Schedule
   - Files
-    - [x] agency.txt
-    - [x] stops.txt
-    - [x] routes.txt
-    - [x] trips.txt
-    - [x] stop_times.txt
-    - [x] calendar.txt
-    - [x] calendar_dates.txt
+    - ✅ agency.txt
+    - ✅ stops.txt
+    - ✅ routes.txt
+    - ✅ trips.txt
+    - ✅ stop_times.txt
+    - ✅ calendar.txt
+    - ✅ calendar_dates.txt
     <details>
       <summary>Unsupported files (WIP)</summary>
   
-      - [ ] fare_attributes.txt
-      - [ ] fare_rules.txt
-      - [ ] timeframes.txt
-      - [ ] fare_media.txt
-      - [ ] fare_products.txt
-      - [ ] fare_leg_rules.txt
-      - [ ] fare_leg_join_rules.txt
-      - [ ] areas.txt
-      - [ ] stop_areas.txt
-      - [ ] networks.txt
-      - [ ] route_networks.txt
-      - [ ] shapes.txt
-      - [ ] frequencies.txt
-      - [ ] transfers.txt
-      - [ ] pathways.txt
-      - [ ] levels.txt
-      - [ ] location_groups.txt
-      - [ ] location_group_stops.txt
-      - [ ] locations.geojson
-      - [ ] booking_rules.txt
-      - [ ] translations.txt
-      - [ ] feed_info.txt
-      - [ ] attributions.txt
+      - ❌ fare_attributes.txt
+      - ❌ fare_rules.txt
+      - ❌ timeframes.txt
+      - ❌ fare_media.txt
+      - ❌ fare_products.txt
+      - ❌ fare_leg_rules.txt
+      - ❌ fare_leg_join_rules.txt
+      - ❌ areas.txt
+      - ❌ stop_areas.txt
+      - ❌ networks.txt
+      - ❌ route_networks.txt
+      - ❌ shapes.txt
+      - ❌ frequencies.txt
+      - ❌ transfers.txt
+      - ❌ pathways.txt
+      - ❌ levels.txt
+      - ❌ location_groups.txt
+      - ❌ location_group_stops.txt
+      - ❌ locations.geojson
+      - ❌ booking_rules.txt
+      - ❌ translations.txt
+      - ❌ feed_info.txt
+      - ❌ attributions.txt
       </details>
   - Features
-    - [x] Load data from any supported file using query parameters
-    - [x] List services for one or more days
-    - [x] Works with streamed data
-    - [x] List directions for a route
-    - [x] See next departures from a stop
-- [ ] GTFS Realtime
+    - ✅ Load data from any supported file using query parameters
+    - ✅ List services for one or more days
+    - ✅ Works with streamed data
+    - ✅ List directions for a route
+    - ✅ See next departures from a stop
+- ❌ GTFS Realtime
   
 
 ## Getting started
