@@ -1,0 +1,7 @@
+dartdoc:
+  tools:
+    placedef:
+      command: ['tools/replace_with_spec.dart', './transit-spec/']
+      setup_command: ['tools/download_spec.dart', '--to-clone=https://github.com/google/transit.git', '--out-directory=./transit-spec/']
+      description: 'Places up-to-date definitions of fields in the doc.'
+      compile_args: ['--verbose']

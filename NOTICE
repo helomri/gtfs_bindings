@@ -1,0 +1,11 @@
+gtfs_bindings
+Copyright 2025 Haroun El Omri. All rights reserved.
+
+This product includes software/documentation developed by
+the GTFS specification authors/contributors (e.g., Google LLC, MobilityData).
+Portions of the documentation within this library are reproduced or adapted from the
+GTFS Schedule reference (https://github.com/google/transit/blob/daa60b4c500534b1a193a499793da3624c3eeb82/LICENSE),
+which is licensed under the Apache License, Version 2.0.
+
+The project gtfs_bindings and its authors/contributors are not in
+any way, shape or form associated with or endorsed by the GTFS specification authors/contributors.

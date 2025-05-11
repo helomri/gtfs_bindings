@@ -1,6 +1,7 @@
-/// Support for doing something awesome.
+/// Toolkit to parse and query GTFS Schedule datasets.
 ///
-/// More dartdocs go here.
+/// All available documentation is ripped from
+/// https://gtfs.org/documentation/schedule/reference/
 library;
 
 export 'src/errors.dart';

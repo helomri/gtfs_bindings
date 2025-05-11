@@ -1,13 +1,23 @@
 import 'package:gtfs_bindings/schedule.dart';
 import 'package:intl/intl.dart';
 
+/// {@tool placedef}
+/// gtfs:Field Types:list:Time
+/// {@end-tool}
 class Time {
+  /// The hour of the time.
   final int hour;
+
+  /// The minute of the time.
   final int minute;
+
+  /// The second of the time.
   final int second;
 
+  /// Creates the time.
   Time(this.hour, this.minute, this.second);
 
+  /// Applies the time to the [DateTime].
   DateTime relativeToDateTime(DateTime date) {
     return date.copyWith(
       hour: hour,
@@ -18,29 +28,30 @@ class Time {
     );
   }
 
+  /// Combines the [Date] and [Time] elements to create a [DateTime].
   DateTime relativeToDate(Date date) {
-    return DateTime(
-      date.year,
-      date.month,
-      date.day,
-      hour,
-      minute,
-      second,
-      0,
-      0,
-    );
+    return DateTime(date.year, date.month, date.day, hour, minute, second);
   }
 
+  /// Parses the time in the HH:mm:ss format.
   static Time parse(String input) {
     final parsed = DateFormat('HH:mm:ss').parse(input);
     return Time(parsed.hour, parsed.minute, parsed.second);
   }
 }
 
+/// The type of pickup for a stop time.
 enum PickupType implements RichlyNamedEnum {
+  /// Regularly scheduled pickup.
   scheduled('Regularly scheduled', 'Regularly scheduled pickup.', 0),
+
+  /// No pickup available.
   notAvailable('No pickup', 'No pickup available.', 1),
+
+  /// Must phone agency to arrange pickup.
   withPhone('Must phone agency', 'Must phone agency to arrange pickup.', 2),
+
+  /// Must coordinate with driver to arrange pickup.
   withDriver(
     'Must coordinate with driver',
     'Must coordinate with driver to arrange pickup.',
@@ -51,18 +62,29 @@ enum PickupType implements RichlyNamedEnum {
   final String displayName;
   @override
   final String description;
+
+  /// The raw ID used in the dataset.
   final int id;
 
   const PickupType(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static PickupType forId(int id) =>
       values.firstWhere((element) => element.id == id, orElse: () => scheduled);
 }
 
+/// The type of drop off for a stop time;
 enum DropOffType implements RichlyNamedEnum {
+  /// Regularly scheduled drop off.
   scheduled('Regularly scheduled', 'Regularly scheduled drop off.', 0),
+
+  /// No drop off available.
   notAvailable('No pickup', 'No drop off available.', 1),
+
+  /// Must phone agency to arrange drop off.
   withPhone('Must phone agency', 'Must phone agency to arrange drop off.', 2),
+
+  /// Must coordinate with driver to arrange drop off.
   withDriver(
     'Must coordinate with driver',
     'Must coordinate with driver to arrange drop off.',
@@ -73,22 +95,33 @@ enum DropOffType implements RichlyNamedEnum {
   final String displayName;
   @override
   final String description;
+
+  /// The raw ID used in the dataset.
   final int id;
 
   const DropOffType(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static DropOffType forId(int id) =>
       values.firstWhere((element) => element.id == id, orElse: () => scheduled);
 }
 
+/// Whether the pickup is continuous from the current stop time to the next.
 enum ContinuousPickup implements RichlyNamedEnum {
+  /// Continuous stopping pickup.
   continuous('Continuous', 'Continuous stopping pickup.', 0),
+
+  /// No continuous stopping pickup.
   notAvailable('Not continuous', 'No continuous stopping pickup.', 1),
+
+  /// Must phone agency to arrange continuous stopping pickup.
   withPhone(
     'Continuous, must phone agency',
     'Must phone agency to arrange continuous stopping pickup.',
     2,
   ),
+
+  /// Must coordinate with driver to arrange continuous stopping pickup.
   withDriver(
     'Continuous, must coordinate with driver',
     'Must coordinate with driver to arrange continuous stopping pickup.',
@@ -99,24 +132,35 @@ enum ContinuousPickup implements RichlyNamedEnum {
   final String displayName;
   @override
   final String description;
+
+  /// The raw ID used in the dataset.
   final int id;
 
   const ContinuousPickup(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static ContinuousPickup forId(int id) => values.firstWhere(
     (element) => element.id == id,
     orElse: () => notAvailable,
   );
 }
 
+/// Whether the drop off is continuous from the current stop time to the next.
 enum ContinuousDropOff implements RichlyNamedEnum {
+  /// Continuous stopping drop off.
   continuous('Continuous', 'Continuous stopping drop off.', 0),
+
+  /// No continuous stopping drop off.
   notAvailable('Not continuous', 'No continuous stopping drop off.', 1),
+
+  /// Must phone agency to arrange continuous stopping drop off.
   withPhone(
     'Continuous, must phone agency',
     'Must phone agency to arrange continuous stopping drop off.',
     2,
   ),
+
+  /// Must coordinate with driver to arrange continuous stopping drop off.
   withDriver(
     'Continuous, must coordinate with driver',
     'Must coordinate with driver to arrange continuous stopping drop off.',
@@ -127,50 +171,133 @@ enum ContinuousDropOff implements RichlyNamedEnum {
   final String displayName;
   @override
   final String description;
+
+  /// The raw ID used in the dataset.
   final int id;
 
   const ContinuousDropOff(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static ContinuousDropOff forId(int id) =>
       values.firstWhere((element) => element.id == id);
 }
 
+/// Whether the times in the stop time a precise.
 enum Timepoint implements RichlyNamedEnum {
+  /// Times are considered approximate.
   approximate('Approximate', 'Times are considered approximate.', 0),
+
+  /// Times are considered exact.
   exact('Exact', 'Times are considered exact.', 1);
 
   @override
   final String displayName;
   @override
   final String description;
+
+  /// The raw ID used in the dataset.
   final int id;
 
   const Timepoint(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static Timepoint forId(int id) =>
       values.firstWhere((element) => element.id == id);
 }
 
+/// Represents all the data for a single stop marked by a vehicle in a trip.
 class StopTime {
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:trip_id:3
+  /// {@end-tool}
   final String tripId;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:arrival_time:3
+  /// {@end-tool}
   final Time? arrivalTime;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:departure_time:3
+  /// {@end-tool}
   final Time? departureTime;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:stop_id:3
+  /// {@end-tool}
   final String? stopId;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:location_group_id:3
+  /// {@end-tool}
   final String? locationGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:location_id:3
+  /// {@end-tool}
   final String? locationId;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:stop_sequence:3
+  /// {@end-tool}
   final int stopSequence;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:stop_headsign:3
+  /// {@end-tool}
   final String? stopHeadsign;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:start_pickup_drop_off_window:3
+  /// {@end-tool}
   final Time? startPickupDropOffWindow;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:end_pickup_drop_off_window:3
+  /// {@end-tool}
   final Time? endPickupDropOffWindow;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:pickup_type:3
+  /// {@end-tool}
   final PickupType? pickupType;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:drop_off_type:3
+  /// {@end-tool}
   final DropOffType? dropOffType;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:continuous_pickup:3
+  /// {@end-tool}
   final ContinuousPickup? continuousPickup;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:continuous_drop_off:3
+  /// {@end-tool}
   final ContinuousDropOff? continuousDropOff;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:shape_dist_traveled:3
+  /// {@end-tool}
   final double? shapeDistTraveled;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:timepoint:3
+  /// {@end-tool}
   final Timepoint? timepoint;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:pickup_booking_rule_id:3
+  /// {@end-tool}
   final String? pickupBookingRuleId;
+
+  /// {@tool placedef}
+  /// gtfs:stop_times.txt:table:drop_off_booking_rule_id:3
+  /// {@end-tool}
   final String? dropOffBookingRuleId;
 
+  /// Creates the stop time.
   const StopTime({
     required this.tripId,
     required this.arrivalTime,
@@ -220,19 +347,25 @@ class StopTime {
   }
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:stop_times.txt:2
+/// {@end-tool}
 class StopTimes extends SingleCsvLazyBinding<StopTime> {
+  /// Creates the list of stop times.
   StopTimes({required super.resourceFile, super.data});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final List<FieldDefinition> staticFieldDefinitions = [
     FieldDefinition(
       'trip_id',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: const IdFieldType(displayName: 'Trip ID'),
       primaryKey: true,
     ),
     FieldDefinition(
       'arrival_time',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
         final timepoint =
@@ -253,7 +386,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'departure_time',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
         final timepoint =
@@ -273,7 +406,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'stop_id',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Stop ID'),
       shouldBeRequired:
           (dataset, header, record) =>
@@ -282,7 +415,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'location_group_id',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Location group ID'),
       shouldBeRequired:
           (dataset, header, record) =>
@@ -292,7 +425,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'location_id',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Location ID'),
       shouldBeRequired:
           (dataset, header, record) =>
@@ -303,17 +436,17 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'stop_sequence',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: IntegerFieldType(NumberConstraint.nonNegative),
     ),
     FieldDefinition(
       'stop_headsign',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: TextFieldType(),
     ),
     FieldDefinition(
       'start_pickup_drop_off_window',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
         if (record.containsKey('location_group_id') ||
@@ -332,7 +465,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'end_pickup_drop_off_window',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
         if (record.containsKey('location_group_id') ||
@@ -351,7 +484,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'pickup_type',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: pickupType,
       shouldBeRequired: (dataset, header, record) {
         final dropOffWindowDefined =
@@ -366,7 +499,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'drop_off_type',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: dropOffType,
       shouldBeRequired: (dataset, header, record) {
         final dropOffWindowDefined =
@@ -381,7 +514,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'continuous_pickup',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: continuousPickup,
       shouldBeRequired: (dataset, header, record) {
         final dropOffWindowDefined =
@@ -393,7 +526,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'continuous_drop_off',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: continuousDropOff,
       shouldBeRequired: (dataset, header, record) {
         final dropOffWindowDefined =
@@ -405,22 +538,22 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     ),
     FieldDefinition(
       'shape_dist_traveled',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const FloatFieldType(NumberConstraint.nonNegative),
     ),
     FieldDefinition(
       'timepoint',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: timepoint,
     ),
     FieldDefinition(
       'pickup_booking_rule_id',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Pickup booking rule ID'),
     ),
     FieldDefinition(
       'drop_off_booking_rule_id',
-      (dataset, header, records) => null,
+      (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Drop off booking rule ID'),
     ),
   ];
@@ -428,6 +561,8 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
   @override
   List<FieldDefinition> get fieldDefinitions => staticFieldDefinitions;
 
+  /// Utility method to statically transform a [MapRecord] into the type of the
+  /// binding.
   static StopTime staticTransform(MapRecord record) => ModelBuilder.build(
     (c) => StopTime(
       tripId: c('trip_id'),
@@ -456,6 +591,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
   @override
   StopTime transform(MapRecord record) => staticTransform(record);
 
+  /// Lists the next times a vehicle from a [route] is gonna stop at a [stop].
   Future<List<({StopTime time, Date date})>> listNextStopTimeForRoute(
     GtfsDataset dataset,
     Route route,
@@ -535,6 +671,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     return foundStopTimes;
   }
 
+  /// Will list the upcoming stop times for a specific [stop].
   Future<
     ({
       List<({StopTime time, Trip trip, Date date, String routeId})> stopTimes,

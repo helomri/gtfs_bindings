@@ -9,11 +9,17 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 
+/// The representation of a GTFS-Schedule dataset. It contains or can load all
+/// the information contained inside a GTFS-dataset.
+///
+/// This dataset can be loaded from a URL.
 class DownloadableDataset extends GtfsDataset {
   static final _logger = Logger('GtfsBinding.DatasetDownloader');
 
+  /// The URL from which we download and read the dataset.
   final Uri uri;
 
+  /// Creates the dataset.
   DownloadableDataset(this.uri);
 
   @override

@@ -1,9 +1,13 @@
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_types/field_types.dart';
 
+/// {@tool placedef}
+/// gtfs:Field Types:list:ID
+/// {@end-tool}
 class IdFieldType extends FieldType<String> {
   @override
   final String displayName;
 
+  /// Creates the field type.
   const IdFieldType({required this.displayName});
 
   @override

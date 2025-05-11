@@ -10,22 +10,40 @@ import 'package:gtfs_bindings/src/schedule/parsing/parsers/stops.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/trips.dart';
 import 'package:logging/logging.dart';
 
+/// The representation of a GTFS-Schedule dataset. It contains or can load all
+/// the information contained inside a GTFS-dataset.
 abstract class GtfsDataset {
+  /// The base logger for all GTFS Schedule related debug info.
   static final baseLogger = Logger('GtfsBinding');
 
+  /// The list of agencies.
   late Agencies agencies;
+
+  /// The list of routes.
   late Routes routes;
+
+  /// The list of trips.
   late Trips trips;
+
+  /// The list of stops.
   late Stops stops;
+
+  /// The list of stop times.
   late StopTimes stopTimes;
+
+  /// The list of service rules.
   late Calendar calendar;
 
+  /// The list of the files contained inside the dataset.
   late List<String> fileNameList;
 
+  /// Gets all the files reader factories depending on the method used to open
+  /// them.
   FutureOr<List<FileOpener>> getSource({String? tempDir});
 
   static final _logger = Logger('GtfsBinding.DatasetPiper');
 
+  /// A utility function to map lazy bindings to field definitions statically.
   static List<FieldDefinition> bindingToFieldDefinitions(LazyBinding binding) =>
       switch (binding.runtimeType) {
         Agencies _ => Agencies.staticFieldDefinitions,
@@ -38,6 +56,7 @@ abstract class GtfsDataset {
         _ => [],
       };
 
+  /// Loads [bindings] in memory.
   Future<void> populateList(
     List<LazyBinding> bindings, {
     bool doValidationChecks = false,
@@ -50,6 +69,8 @@ abstract class GtfsDataset {
     }
   }
 
+  /// A selection of the most frequently-accessed bindings which are still generally
+  /// small in size.
   List<LazyBinding> get primaryBindings => [
     agencies,
     routes,
@@ -57,6 +78,7 @@ abstract class GtfsDataset {
     if (calendar.occasionalCalendar != null) calendar.occasionalCalendar!,
   ];
 
+  /// A list of all the bindings available in the dataset.
   List<LazyBinding> get bindings => [
     agencies,
     routes,
@@ -67,6 +89,7 @@ abstract class GtfsDataset {
     if (calendar.occasionalCalendar != null) calendar.occasionalCalendar!,
   ];
 
+  /// All the parsers that create bindings by detected necessary files.
   final List<Parser> parsers = const [
     AgencyParser(),
     StopsParser(),
@@ -76,6 +99,10 @@ abstract class GtfsDataset {
     CalendarParser(),
   ];
 
+  /// Retrieves the [FileOpener] via [getSource] and uses the [parsers] to
+  /// create load the bindings in the dataset.
+  ///
+  /// We "pipe" the raw files to their corresponding binding(s).
   Future<GtfsDataset> pipe({String? tempDir}) async {
     final dataset = await getSource(tempDir: tempDir);
 

@@ -5,29 +5,15 @@ import 'package:gtfs_bindings/src/schedule/dataset.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/csv_parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:agency.txt:2
+/// {@end-tool}
 class AgencyParser implements Parser {
+  /// Creates the parser.
   const AgencyParser();
 
   @override
   Map<String, bool> get listenedFiles => {'agency.txt': true};
-
-  @override
-  FutureOr<GtfsDataset> parseAndApplyFromAvailable(
-    GtfsDataset sourceDataset,
-    Map<String, FileOpener> availableFiles, {
-    bool doChecks = false,
-  }) async {
-    return sourceDataset
-      ..agencies = Agencies(
-        resourceFile: availableFiles['agency.txt']!,
-        data: await ListCSVFile.parse(
-          availableFiles['agency.txt']!,
-          Agencies.staticFieldDefinitions,
-          sourceDataset,
-          evaluateIndividualFields: doChecks,
-        ),
-      );
-  }
 
   @override
   FutureOr<GtfsDataset> initializeDataStream(

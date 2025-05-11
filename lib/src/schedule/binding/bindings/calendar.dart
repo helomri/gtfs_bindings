@@ -5,39 +5,63 @@ import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_types/date.
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_types/enum.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_types/id.dart';
 
+/// Indicates whether the service operates on a specific day.
 enum OperatesOnDay implements RichlyNamedEnum {
-  available('Available', 'Service is available for days in the date range.', 1),
+  /// Service is available for all days in the date range.
+  available(
+    'Available',
+    'Service is available for all days in the date range.',
+    1,
+  ),
+
+  /// Service is not available for all days in the date range.
   notAvailable(
     'Unavailable',
     'Service is not available for all days in the date range.',
     0,
   );
 
-  final int id;
+  /// The raw ID used in the dataset.
   @override
   final String displayName;
   @override
   final String description;
 
+  /// The raw ID used in the dataset.
+  final int id;
+
   const OperatesOnDay(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static OperatesOnDay forId(int id) =>
       values.firstWhere((element) => element.id == id);
 
+  /// Transforms the enum to a boolean.
   bool toBool() => id == 1;
 }
 
+/// {@tool placedef}
+/// gtfs:Field Types:list:Date
+/// {@end-tool}
 class Date {
+  /// The year of the date.
   final int year;
+
+  /// The month of the date.
   final int month;
+
+  /// The day of the date.
   final int day;
 
-  Date(this.year, this.month, this.day);
+  /// Creates the date.
+  const Date(this.year, this.month, this.day);
 
+  /// Transforms into [DateTime].
   DateTime toDateTime() {
     return DateTime(year, month, day);
   }
 
+  /// Parses the date as YYYYMMDD.
   static Date parse(String input) {
     return Date(
       int.parse(input.substring(0, 4)),
@@ -46,15 +70,18 @@ class Date {
     );
   }
 
-  static Date fromDatetime(DateTime dateTime) =>
+  /// Gets the [Date] component of a [DateTime].
+  factory Date.fromDatetime(DateTime dateTime) =>
       Date(dateTime.year, dateTime.month, dateTime.day);
 
-  static Date now() => fromDatetime(DateTime.now());
+  /// Gets the current [Date].
+  static Date now() => Date.fromDatetime(DateTime.now());
 
   @override
   String toString() =>
       '${day.toString().padLeft(2, '0')}/${month.toString().padLeft(2, '0')}/$year';
 
+  /// Gives the weekday of the date.
   String weekdayToString() => switch (toDateTime().weekday) {
     DateTime.monday => 'monday',
     DateTime.tuesday => 'tuesday',
@@ -75,18 +102,60 @@ class Date {
   }
 }
 
+/// Represents a date range from [startDate] to [endDate] in which the [id]
+/// service is operating.
 class RegularService {
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:service_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:monday:3
+  /// {@end-tool}
   final OperatesOnDay monday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:tuesday:3
+  /// {@end-tool}
   final OperatesOnDay tuesday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:wednesday:3
+  /// {@end-tool}
   final OperatesOnDay wednesday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:thursday:3
+  /// {@end-tool}
   final OperatesOnDay thursday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:friday:3
+  /// {@end-tool}
   final OperatesOnDay friday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:saturday:3
+  /// {@end-tool}
   final OperatesOnDay saturday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:monday:3
+  /// {@end-tool}
   final OperatesOnDay sunday;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:start_date:3
+  /// {@end-tool}
   final Date startDate;
+
+  /// {@tool placedef}
+  /// gtfs:calendar.txt:table:end_date:3
+  /// {@end-tool}
   final Date endDate;
 
+  /// Creates the object.
   const RegularService({
     required this.id,
     required this.monday,
@@ -120,29 +189,51 @@ class RegularService {
   }
 }
 
+/// The type of exception for the service availability.
 enum ExceptionType implements RichlyNamedEnum {
+  /// Service has been added for the specified date.
   added('Added', 'Service has been added for the specified date.', 1),
+
+  /// Service has been removed for the specified date.
   removed('Removed', 'Service has been removed for the specified date.', 2);
 
   @override
   final String displayName;
   @override
   final String description;
+
+  /// The raw ID used in the dataset.
   final int id;
 
+  /// Creates the object.
   const ExceptionType(this.displayName, this.description, this.id);
 
+  /// Transforms the raw value to the enum value.
   static ExceptionType forId(int id) =>
       values.firstWhere((element) => element.id == id);
 
+  /// Transforms the enum to a boolean.
   bool toBool() => id == 1;
 }
 
+/// Represents an exception when a single service is either added or removed.
 class OccasionalService {
+  /// {@tool placedef}
+  /// gtfs:calendar_dates.txt:table:service_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:calendar_dates.txt:table:date:3
+  /// {@end-tool}
   final Date date;
+
+  /// {@tool placedef}
+  /// gtfs:calendar_dates.txt:table:exception_type:3
+  /// {@end-tool}
   final ExceptionType exceptionType;
 
+  /// Creates the object.
   const OccasionalService({
     required this.id,
     required this.date,
@@ -158,10 +249,16 @@ class OccasionalService {
   }
 }
 
+/// The object responsible for both [regularCalendar] and [occasionalCalendar].
 class Calendar {
+  /// The regular calendar defines different date ranges and weekdays when
+  /// services are added.
   final RegularCalendar? regularCalendar;
+
+  /// The occasional calendar defines days when services are exceptionally add or removed.
   final OccasionalCalendar? occasionalCalendar;
 
+  /// Creates the object.
   const Calendar({
     required this.regularCalendar,
     required this.occasionalCalendar,
@@ -223,6 +320,7 @@ class Calendar {
     return servicesForDays;
   }
 
+  /// Lists all the services available for a day.
   Future<Set<String>> listServicesForDay(Date day) async {
     final dateTime = day.toDateTime();
     final availableRegularServies =
@@ -260,59 +358,65 @@ class Calendar {
   }
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:calendar.txt:2
+/// {@end-tool}
 class RegularCalendar extends SingleCsvLazyBinding<RegularService> {
+  /// Creates the regular calendar.
   RegularCalendar({required super.resourceFile, super.data});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = [
     FieldDefinition(
       'service_id',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: const IdFieldType(displayName: 'Service ID'),
       primaryKey: true,
     ),
     FieldDefinition(
       'monday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'tuesday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'wednesday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'thursday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'friday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'saturday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'sunday',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: operatesOnDay,
     ),
     FieldDefinition(
       'start_date',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: const DateFieldType(),
     ),
     FieldDefinition(
       'end_date',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: const DateFieldType(),
     ),
   ];
@@ -320,6 +424,8 @@ class RegularCalendar extends SingleCsvLazyBinding<RegularService> {
   @override
   List<FieldDefinition> get fieldDefinitions => staticFieldDefinitions;
 
+  /// Utility method to statically transform a [MapRecord] into the type of the
+  /// binding.
   static RegularService staticTransform(MapRecord record) => ModelBuilder.build(
     (c) => RegularService(
       id: c('service_id'),
@@ -341,24 +447,30 @@ class RegularCalendar extends SingleCsvLazyBinding<RegularService> {
   RegularService transform(MapRecord record) => staticTransform(record);
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:calendar_dates.txt:2
+/// {@end-tool}
 class OccasionalCalendar extends SingleCsvLazyBinding<OccasionalService> {
+  /// Creates the occasional calendar.
   OccasionalCalendar({required super.resourceFile, super.data});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = [
     FieldDefinition(
       'service_id',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: IdFieldType(displayName: 'Service ID'),
       primaryKey: true,
     ),
     FieldDefinition(
       'date',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: DateFieldType(),
     ),
     FieldDefinition(
       'exception_type',
-      (dataset, header, records) => true,
+      (dataset, header, fileLength) => true,
       type: exceptionType,
     ),
   ];
@@ -366,6 +478,8 @@ class OccasionalCalendar extends SingleCsvLazyBinding<OccasionalService> {
   @override
   List<FieldDefinition> get fieldDefinitions => staticFieldDefinitions;
 
+  /// Utility method to statically transform a [MapRecord] into the type of the
+  /// binding.
   OccasionalService staticTransform(MapRecord record) => ModelBuilder.build(
     (c) => OccasionalService(
       id: c('service_id'),

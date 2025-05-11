@@ -6,31 +6,17 @@ import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/csv_parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 
 // TODO: Add support for locations.geojson.
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:stops.txt:2
+/// {@end-tool}
 class StopsParser implements Parser {
+  /// Creates the parser.
   const StopsParser();
 
   @override
   Map<String, bool> get listenedFiles => {
     'stops.txt': true /*false*/ /*'locations.geojson': false*/,
   };
-
-  @override
-  FutureOr<GtfsDataset> parseAndApplyFromAvailable(
-    GtfsDataset sourceDataset,
-    Map<String, FileOpener> availableFiles, {
-    bool doChecks = false,
-  }) async {
-    return sourceDataset
-      ..stops = Stops(
-        resourceFile: availableFiles['stops.txt']!,
-        data: await ListCSVFile.parse(
-          availableFiles['stops.txt']!,
-          Stops.staticFieldDefinitions,
-          sourceDataset,
-          evaluateIndividualFields: doChecks,
-        ),
-      );
-  }
 
   @override
   FutureOr<GtfsDataset> initializeDataStream(

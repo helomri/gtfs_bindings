@@ -9,10 +9,15 @@ import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_definition.
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_types/text.dart';
 import 'package:logging/logging.dart';
 
+/// A simple record to map a [Stream<List<int>>] factory to a file [name].
 typedef FileOpener = ({Stream<List<int>> Function() stream, String name});
 
+/// A [MapRecord] maps every single record value to the [String] name of the
+/// field as a key.
 typedef MapRecord = Map<String, String>;
 
+/// Transforms a [ListRecord] into a [MapRecord] using the [header] as order
+/// reference.
 MapRecord toMapRecord(List<FieldDefinition> header, ListRecord rawRecord) {
   final newRecord = <String, String>{};
   for (var i = 0; i < rawRecord.length; i++) {
@@ -24,8 +29,12 @@ MapRecord toMapRecord(List<FieldDefinition> header, ListRecord rawRecord) {
   return newRecord;
 }
 
+/// A [ListRecord] lists every single record value in the same order as its name
+/// from the file header.
 typedef ListRecord = List<String?>;
 
+/// Transforms a [MapRecord] into a [ListRecord] using the [header] as the
+/// source for field names.
 ListRecord toListRecord(List<FieldDefinition> header, MapRecord mapRecord) {
   return header.map((e) => mapRecord[e.name]).toList(growable: false);
 }
@@ -61,17 +70,19 @@ Future<void> _checkForIndividualField(
   }
 }
 
+// TODO: Refactor to be more efficient.
 Future<void> _checkForOverallField(
   BaseCSVFile file,
   List<FieldDefinition> fieldDefinitions,
   List<FieldDefinition> header,
   GtfsDataset dataset,
 ) async {
+  int fileLength = file.length;
   for (final field in fieldDefinitions) {
     final required = await field.shouldBeRequiredOverall(
       dataset,
       file.header,
-      file.toList(growable: false),
+      fileLength,
     );
 
     if (required == true && !header.contains(field)) {
@@ -85,16 +96,19 @@ Future<void> _checkForOverallField(
 
 final _logger = Logger('GtfsBindings.CSVParser');
 
+/// Streams [ListRecord]s as they get read in the [resourceFile]
 Stream<ListRecord> streamRecordsThroughFile(
-  FileOpener resourceFile,
-  List<FieldDefinition> fieldDefinitions,
-  LoadCriterion? criteria, {
+  FileOpener resourceFile, {
+  LoadCriterion? criteria,
   bool doValidationChecks = false,
+  List<FieldDefinition> fieldDefinitions = const [],
   GtfsDataset? dataset,
   Completer<void>? cancellationSignal,
 }) async* {
-  if (doValidationChecks && dataset == null) {
-    throw Exception('Wants to do validation checks but no dataset provided');
+  if (doValidationChecks && (dataset == null || fieldDefinitions.isEmpty)) {
+    throw Exception(
+      "Wants to do validation checks but no dataset provided and/or field definitions aren't made available.",
+    );
   }
 
   final (stream: fileStream, name: fileName) = resourceFile;
@@ -118,12 +132,14 @@ Stream<ListRecord> streamRecordsThroughFile(
             final field = fieldDefinitions.firstWhere(
               (element) => element.name == e,
               orElse: () {
-                _logger.warning(
-                  'Unknown field in $fileName, header = ${record.join(',')}',
-                );
+                if (doValidationChecks) {
+                  _logger.warning(
+                    'Unknown field in $fileName, header = ${record.join(',')}',
+                  );
+                }
                 return FieldDefinition<Object>(
                   e ?? 'unnamed_field',
-                  (dataset, header, records) => null,
+                  (dataset, header, fileLength) => null,
                   type: TextFieldType(),
                 );
               },
@@ -177,22 +193,36 @@ Stream<ListRecord> streamRecordsThroughFile(
   //_checkForOverallField(file, fieldDefinitions, header!, dataset!);
 }
 
+/// The equivalent of a [List] of records ([MapRecord]s and [ListRecord]) made
+/// to do translations on the fly and be queriable.
 sealed class BaseCSVFile extends Iterable<MapRecord> {
+  /// The actual header for the binding.
   List<FieldDefinition> get header;
+
+  /// The iterator of [ListRecord]s.
   Iterator<ListRecord> get rawIterator;
 
+  /// Creates a new [BaseCSVFile] filtered via the [criteria].
   BaseCSVFile filterThroughCriteria(LoadCriterion criteria);
 
+  /// Transforms the CSVFile into a file that stores [ListRecord] in memory.
   ListCSVFile toListCSVFile();
+
+  /// Transforms the CSVFile into a file that stores [MapRecord] in memory.
   MapCSVFile toMapCSVFile();
 
   const BaseCSVFile();
 }
 
+/// An iterator that transforms [ListRecord]s to [MapRecord]s.
 class MapRecordIterator implements Iterator<MapRecord> {
+  /// Creates the [MapRecordIterator].
   const MapRecordIterator({required this.header, required this.baseIterator});
 
+  /// The header required to map [ListRecord] fields to their name.
   final List<FieldDefinition> header;
+
+  /// The initial iterator of [ListRecord]s.
   final Iterator<ListRecord> baseIterator;
 
   @override
@@ -202,10 +232,15 @@ class MapRecordIterator implements Iterator<MapRecord> {
   bool moveNext() => baseIterator.moveNext();
 }
 
+/// An iterator that transforms [MapRecord]s to [ListRecord]s
 class ListRecordIterator implements Iterator<ListRecord> {
+  /// Creates the [ListRecordIterator].
   const ListRecordIterator({required this.header, required this.baseIterator});
 
+  /// The header required to list [MapRecord]s in the same way as the [header].
   final List<FieldDefinition> header;
+
+  /// The initial iterator of [MapRecord]s.
   final Iterator<MapRecord> baseIterator;
 
   @override
@@ -215,13 +250,18 @@ class ListRecordIterator implements Iterator<ListRecord> {
   bool moveNext() => baseIterator.moveNext();
 }
 
+/// A [BaseCSVFile] that stores [ListRecord]s in memory.
 class ListCSVFile extends BaseCSVFile {
+  /// Creates the [ListCSVFile].
   const ListCSVFile({required this.header, required this.records});
 
+  /// Get the record at [index].
   ListRecord operator [](int index) => records[index];
 
   @override
   final List<FieldDefinition> header;
+
+  /// The actual list of [ListRecord] stored in memory.
   final List<ListRecord> records;
 
   @override
@@ -277,6 +317,9 @@ class ListCSVFile extends BaseCSVFile {
     );
   }
 
+  /// Parses the [input] into a [ListCSVFile].
+  ///
+  /// Quite close to [streamRecordsThroughFile].
   static Future<ListCSVFile> parse(
     FileOpener input,
     List<FieldDefinition> fieldDefinitions,
@@ -310,7 +353,7 @@ class ListCSVFile extends BaseCSVFile {
                   );
                   return FieldDefinition(
                     e ?? 'unnamed_field',
-                    (dataset, header, records) => null,
+                    (dataset, header, fileLength) => null,
                     type: TextFieldType(),
                   );
                 },
@@ -353,7 +396,9 @@ class ListCSVFile extends BaseCSVFile {
   }
 }
 
+/// A [BaseCSVFile] that stores [MapRecord]s in memory.
 class MapCSVFile extends BaseCSVFile {
+  /// Creates the [MapCSVFile].
   const MapCSVFile({
     required List<FieldDefinition> actualHeader,
     required this.records,
@@ -361,6 +406,8 @@ class MapCSVFile extends BaseCSVFile {
 
   @override
   final List<FieldDefinition> header;
+
+  /// The list of [MapRecord] stored in memory.
   final List<MapRecord> records;
 
   @override

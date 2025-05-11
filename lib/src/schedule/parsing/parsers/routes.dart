@@ -5,8 +5,16 @@ import 'package:gtfs_bindings/src/schedule/dataset.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/csv_parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 
-/// TODO: route_networks
+// TODO: route_networks
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:routes.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:route_networks.txt:2
+/// {@end-tool}
 class RoutesParser implements Parser {
+  /// Creates the parser.
   const RoutesParser();
 
   @override
@@ -14,24 +22,6 @@ class RoutesParser implements Parser {
     'routes.txt': true,
     'route_networks.txt': false,
   };
-
-  @override
-  FutureOr<GtfsDataset> parseAndApplyFromAvailable(
-    GtfsDataset sourceDataset,
-    Map<String, FileOpener> availableFiles, {
-    bool doChecks = false,
-  }) async {
-    return sourceDataset
-      ..routes = Routes(
-        resourceFile: availableFiles['routes.txt']!,
-        data: await ListCSVFile.parse(
-          availableFiles['routes.txt']!,
-          Routes.staticFieldDefinitions,
-          sourceDataset,
-          evaluateIndividualFields: doChecks,
-        ),
-      );
-  }
 
   @override
   FutureOr<GtfsDataset> initializeDataStream(

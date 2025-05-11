@@ -5,7 +5,15 @@ import 'package:gtfs_bindings/src/schedule/dataset.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/csv_parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:calendar.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:calendar_dates.txt:2
+/// {@end-tool}
 class CalendarParser implements Parser {
+  /// Creates the parser.
   const CalendarParser();
 
   @override
@@ -13,41 +21,6 @@ class CalendarParser implements Parser {
     'calendar.txt': false,
     'calendar_dates.txt': false,
   };
-
-  @override
-  FutureOr<GtfsDataset> parseAndApplyFromAvailable(
-    GtfsDataset sourceDataset,
-    Map<String, FileOpener> availableFiles, {
-    bool doChecks = false,
-  }) async {
-    return sourceDataset
-      ..calendar = Calendar(
-        regularCalendar:
-            availableFiles.containsKey('calendar.txt')
-                ? RegularCalendar(
-                  resourceFile: availableFiles['calendar.txt']!,
-                  data: await ListCSVFile.parse(
-                    availableFiles['calendar.txt']!,
-                    RegularCalendar.staticFieldDefinitions,
-                    sourceDataset,
-                    evaluateIndividualFields: doChecks,
-                  ),
-                )
-                : null,
-        occasionalCalendar:
-            availableFiles.containsKey('calendar_dates.txt')
-                ? OccasionalCalendar(
-                  resourceFile: availableFiles['calendar_dates.txt']!,
-                  data: await ListCSVFile.parse(
-                    availableFiles['calendar_dates.txt']!,
-                    OccasionalCalendar.staticFieldDefinitions,
-                    sourceDataset,
-                    evaluateIndividualFields: doChecks,
-                  ),
-                )
-                : null,
-      );
-  }
 
   @override
   FutureOr<GtfsDataset> initializeDataStream(
