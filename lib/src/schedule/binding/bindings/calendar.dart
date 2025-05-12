@@ -21,7 +21,6 @@ enum OperatesOnDay implements RichlyNamedEnum {
     0,
   );
 
-  /// The raw ID used in the dataset.
   @override
   final String displayName;
   @override
