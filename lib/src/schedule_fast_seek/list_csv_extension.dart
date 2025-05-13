@@ -9,7 +9,7 @@ const int individualRecordIndexSize = 50_000;
 /// A [ListCSVFile] that splits [records] in [individualRecordIndexSize]-sized
 /// lists that *could* improve performance (this is currently unproven).
 class FastSeekListCSV extends ListCSVFile {
-  /// Creates the [FastSeekListCSVFile].
+  /// Creates the [FastSeekListCSV].
   const FastSeekListCSV({
     required super.header,
     required this.recordIndex,

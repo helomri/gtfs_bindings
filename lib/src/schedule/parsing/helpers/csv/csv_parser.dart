@@ -9,7 +9,7 @@ import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_definition.
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_types/text.dart';
 import 'package:logging/logging.dart';
 
-/// A simple record to map a [Stream<List<int>>] factory to a file [name].
+/// A simple record to map a [Stream<List<int>>] factory to a file `name`.
 typedef FileOpener = ({Stream<List<int>> Function() stream, String name});
 
 /// A [MapRecord] maps every single record value to the [String] name of the

@@ -13,3 +13,14 @@ pubspec.lock
 # They got in because I use path_provider at some point in the example.
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# I am also adding editor files which in my case aren't a security risk but could be for anyone else.
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Mac
+.DS_Store
+

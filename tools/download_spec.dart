@@ -33,6 +33,10 @@ Future<int> main(List<String> arguments) async {
   late final ProcessResult result;
 
   if (outDirectory.existsSync()) {
+    // In case the repo got edited.
+    await Process.run('git', [
+      'stash',
+    ], workingDirectory: outDirectory.absolute.path);
     result = await Process.run('git', [
       'pull',
       '--rebase',
