@@ -366,7 +366,7 @@ class RegularCalendar extends SingleCsvLazyBinding<RegularService> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'service_id',
       (dataset, header, fileLength) => true,
@@ -455,7 +455,7 @@ class OccasionalCalendar extends SingleCsvLazyBinding<OccasionalService> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'service_id',
       (dataset, header, fileLength) => true,

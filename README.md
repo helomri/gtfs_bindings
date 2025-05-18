@@ -1,30 +1,35 @@
 A utility package to read the contents of a GTFS Schedule dataset.
 
-## Features
 
+## Features
+[//]: # (We do not use checkboxes because some renderers for the Dart doc don't support it)
 - GTFS Schedule
   - Files
-    - ✅ agency.txt
-    - ✅ stops.txt
-    - ✅ routes.txt
-    - ✅ trips.txt
-    - ✅ stop_times.txt
-    - ✅ calendar.txt
-    - ✅ calendar_dates.txt
+    - Basic files
+      - ✅ agency.txt
+      - ✅ stops.txt
+      - ✅ routes.txt
+      - ✅ trips.txt
+      - ✅ stop_times.txt
+      - ✅ calendar.txt
+      - ✅ calendar_dates.txt
+    - GTFS-Fares (V1 and V2)
+      - ✅ fare_attributes.txt
+      - ✅ fare_rules.txt
+      - ✅ fare_media.txt
+      - ✅ fare_products.txt
+      - ✅ rider_categories.txt
+      - ✅ fare_leg_rules.txt
+      - ✅ fare_leg_join_rules.txt
+      - ✅ fare_transfer_rules.txt
+      - ✅ timeframes.txt
+      - ✅ networks.txt
+      - ✅ route_networks.txt
+      - ✅ areas.txt
+      - ✅ stop_areas.txt
     <details>
       <summary>Unsupported files (WIP)</summary>
   
-      - ❌ fare_attributes.txt
-      - ❌ fare_rules.txt
-      - ❌ timeframes.txt
-      - ❌ fare_media.txt
-      - ❌ fare_products.txt
-      - ❌ fare_leg_rules.txt
-      - ❌ fare_leg_join_rules.txt
-      - ❌ areas.txt
-      - ❌ stop_areas.txt
-      - ❌ networks.txt
-      - ❌ route_networks.txt
       - ❌ shapes.txt
       - ❌ frequencies.txt
       - ❌ transfers.txt

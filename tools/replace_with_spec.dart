@@ -171,11 +171,12 @@ Future<int> main(List<String> arguments) async {
     }
   } else if (elementGroup.startsWith('list')) {
     final String? start = args.isEmpty ? null : args.removeAt(0);
-
-    int listId = (int.tryParse(elementGroup.substring(4)) ?? 1) - 1;
+    bool keepList = elementGroup.substring(4).startsWith('k');
+    int listId =
+        (int.tryParse(elementGroup.substring(keepList ? 5 : 4)) ?? 1) - 1;
     int currentListId = 0;
     bool listStarted = false;
-    for (final line in sectionContent.split('\n')) {
+    for (final line in sectionContent.split(RegExp(r'\n|<br>'))) {
       if (!line.trim().startsWith(RegExp(r'[*-] '))) {
         if (listStarted) {
           if (currentListId == listId) break;
@@ -196,7 +197,7 @@ Future<int> main(List<String> arguments) async {
       if (currentListId == listId) {
         if (start != null && !simplifiedLine.startsWith(start)) continue;
 
-        stdout.writeln(line.substring(2));
+        stdout.writeln(line.substring(keepList ? 0 : 2));
 
         if (start != null) break;
       }

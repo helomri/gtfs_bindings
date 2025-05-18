@@ -7,6 +7,7 @@ library;
 export 'src/errors.dart';
 export 'src/schedule/binding/bindings/agency.dart';
 export 'src/schedule/binding/bindings/calendar.dart';
+export 'src/schedule/binding/bindings/fares.dart';
 export 'src/schedule/binding/bindings/routes.dart';
 export 'src/schedule/binding/bindings/stop_times.dart';
 export 'src/schedule/binding/bindings/stops.dart';

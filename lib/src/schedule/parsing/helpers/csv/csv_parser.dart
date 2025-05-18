@@ -101,7 +101,8 @@ Stream<ListRecord> streamRecordsThroughFile(
   FileOpener resourceFile, {
   LoadCriterion? criteria,
   bool doValidationChecks = false,
-  List<FieldDefinition> fieldDefinitions = const [],
+  List<FieldDefinition<dynamic>> fieldDefinitions =
+      const <FieldDefinition<dynamic>>[],
   GtfsDataset? dataset,
   Completer<void>? cancellationSignal,
 }) async* {
@@ -113,7 +114,7 @@ Stream<ListRecord> streamRecordsThroughFile(
 
   final (stream: fileStream, name: fileName) = resourceFile;
 
-  List<FieldDefinition>? header;
+  List<FieldDefinition<dynamic>>? header;
   List<int>? criterionRequestedFieldsIndices;
   await for (final rawLine in fileStream()
       .transform(utf8.decoder)

@@ -4,6 +4,7 @@ import 'package:gtfs_bindings/schedule.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/agency.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/calendar.dart';
+import 'package:gtfs_bindings/src/schedule/parsing/parsers/fares.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/routes.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/stop_times.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/stops.dart';
@@ -31,8 +32,11 @@ abstract class GtfsDataset {
   /// The list of stop times.
   late StopTimes stopTimes;
 
-  /// The list of service rules.
+  /// The calendar of service rules.
   late Calendar calendar;
+
+  /// The list of fares.
+  late Fares fares;
 
   /// The list of the files contained inside the dataset.
   late List<String> fileNameList;
@@ -42,19 +46,6 @@ abstract class GtfsDataset {
   FutureOr<List<FileOpener>> getSource({String? tempDir});
 
   static final _logger = Logger('GtfsBinding.DatasetPiper');
-
-  /// A utility function to map lazy bindings to field definitions statically.
-  static List<FieldDefinition> bindingToFieldDefinitions(LazyBinding binding) =>
-      switch (binding.runtimeType) {
-        Agencies _ => Agencies.staticFieldDefinitions,
-        Routes _ => Routes.staticFieldDefinitions,
-        Trips _ => Trips.staticFieldDefinitions,
-        Stops _ => Stops.staticFieldDefinitions,
-        StopTimes _ => Stops.staticFieldDefinitions,
-        RegularCalendar _ => RegularCalendar.staticFieldDefinitions,
-        OccasionalCalendar _ => OccasionalCalendar.staticFieldDefinitions,
-        _ => [],
-      };
 
   /// Loads [bindings] in memory.
   Future<void> populateList(
@@ -76,6 +67,7 @@ abstract class GtfsDataset {
     routes,
     if (calendar.regularCalendar != null) calendar.regularCalendar!,
     if (calendar.occasionalCalendar != null) calendar.occasionalCalendar!,
+    ...fares.bindings,
   ];
 
   /// A list of all the bindings available in the dataset.
@@ -87,6 +79,7 @@ abstract class GtfsDataset {
     stopTimes,
     if (calendar.regularCalendar != null) calendar.regularCalendar!,
     if (calendar.occasionalCalendar != null) calendar.occasionalCalendar!,
+    ...fares.bindings,
   ];
 
   /// All the parsers that create bindings by detected necessary files.
@@ -97,6 +90,8 @@ abstract class GtfsDataset {
     StopTimesParser(),
     TripsParser(),
     CalendarParser(),
+    // Must be after RoutesParser.
+    FaresParser(),
   ];
 
   /// Retrieves the [FileOpener] via [getSource] and uses the [parsers] to
