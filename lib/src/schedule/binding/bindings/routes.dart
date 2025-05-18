@@ -103,7 +103,7 @@ enum RouteType implements RichlyNamedEnum {
       values.firstWhere((element) => element.id == id);
 }
 
-/// A route a group of trips that are displayed to riders as a single service.
+/// A route is a group of trips that are displayed to riders as a single service.
 class Route {
   /// {@tool placedef}
   /// gtfs:routes.txt:table:route_id:3
@@ -219,7 +219,7 @@ class Routes extends SingleCsvLazyBinding<Route> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final List<FieldDefinition> staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'route_id',
       (dataset, header, fileLength) => true,

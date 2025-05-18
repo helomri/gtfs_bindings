@@ -5,7 +5,61 @@ import 'package:gtfs_bindings/src/schedule/dataset.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/csv_parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 
+/// V1:
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_attributes.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_rules.txt:2
+/// {@end-tool}
+///
+/// V2:
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_media.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_products.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_categories.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_leg_rules.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_leg_join_rules.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_transfer_rules.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:timeframes.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:networks.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:route_networks.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:areas.txt:2
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:stop_areas.txt:2
+/// {@end-tool}
 class FaresParser extends Parser {
+  /// Creates the parser.
   const FaresParser();
 
   @override

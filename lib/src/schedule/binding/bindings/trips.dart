@@ -189,7 +189,7 @@ class Trips extends SingleCsvLazyBinding<Trip> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final List<FieldDefinition> staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'route_id',
       (dataset, header, fileLength) => true,

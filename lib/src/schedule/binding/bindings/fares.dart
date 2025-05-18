@@ -41,27 +41,77 @@ class Fares {
   final List<FareCsvBinding> bindings;
 
   // V1
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_attributes.txt:2
+  /// {@end-tool}
   FareAttributes? get fareAttributes =>
       bindings.whereType<FareAttributes>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_rules.txt:2
+  /// {@end-tool}
   FareRules? get fareRules => bindings.whereType<FareRules>().singleOrNull;
 
   // V2
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_media.txt:2
+  /// {@end-tool}
   FareMedias? get fareMedia => bindings.whereType<FareMedias>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_products.txt:2
+  /// {@end-tool}
   FareProducts? get fareProducts =>
       bindings.whereType<FareProducts>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:rider_categories.txt:2
+  /// {@end-tool}
   RiderCategories? get riderCategories =>
       bindings.whereType<RiderCategories>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_leg_rules.txt:2
+  /// {@end-tool}
   FareLegRules? get fareLegRules =>
       bindings.whereType<FareLegRules>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_leg_join_rules.txt:2
+  /// {@end-tool}
   FareLegJoinRules? get fareLegJoinRules =>
       bindings.whereType<FareLegJoinRules>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:fare_transfer_rules.txt:2
+  /// {@end-tool}
   FareTransferRules? get fareTransferRules =>
       bindings.whereType<FareTransferRules>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:timeframes.txt:2
+  /// {@end-tool}
   Timeframes? get timeframes => bindings.whereType<Timeframes>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:networks.txt:2
+  /// {@end-tool}
   Networks? get networks => bindings.whereType<Networks>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:route_networks.txt:2
+  /// {@end-tool}
   RouteNetworks? get routeNetworks =>
       bindings.whereType<RouteNetworks>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:areas.txt:2
+  /// {@end-tool}
   Areas? get areas => bindings.whereType<Areas>().singleOrNull;
+
+  /// {@tool placedef}
+  /// gtfs:2Dataset Files:table:stop_areas.txt:2
+  /// {@end-tool}
   StopAreas? get stopAreas => bindings.whereType<StopAreas>().singleOrNull;
 
   /// Creates the fares list.
@@ -72,8 +122,12 @@ class Fares {
       bindings.map((e) => e.version).toSet();
 }
 
+/// The way the fare is paid.
 enum PaymentMethod implements RichlyNamedEnum {
+  /// Fare is paid on board.
   paidOnBoard('Paid on board', 'Fare is paid on board.'),
+
+  /// Fare must be paid before boarding.
   paidBeforeOnboarding(
     'Paid before onboarding',
     'Fare must be paid before boarding.',
@@ -88,10 +142,18 @@ enum PaymentMethod implements RichlyNamedEnum {
   final String displayName;
 }
 
+/// The transfer policy the operator uses.
 enum TransferPolicy implements RichlyNamedEnum {
+  /// No transfers permitted on this fare.
   noTransfers('No transfers', 'No transfers permitted on this fare.'),
+
+  /// Riders may transfer once.
   oneTransfer('One transfer', 'Riders may transfer once.'),
+
+  /// Riders may transfer twice.
   twoTransfers('Two transfers', 'Riders may transfer twice.'),
+
+  /// Unlimited transfers are permitted.
   unlimitedTransfers(
     'Unlimited transfers',
     'Unlimited transfers are permitted.',
@@ -106,15 +168,44 @@ enum TransferPolicy implements RichlyNamedEnum {
   final String displayName;
 }
 
+/// Represents basic fare attributes assigned to a [fareId].
 class FareAttribute {
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:fare_id:3
+  /// {@end-tool}
   final String fareId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:price:3
+  /// {@end-tool}
   final double price;
+
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:currency_type:3
+  /// {@end-tool}
   final String currencyCode;
+
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:payment_method:3
+  /// {@end-tool}
   final PaymentMethod paymentMethod;
+
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:transfers:3
+  /// {@end-tool}
   final TransferPolicy transfers;
+
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:agency_id:3
+  /// {@end-tool}
   final String? agencyId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_attributes.txt:table:transfer_duration:3
+  /// {@end-tool}
   final int? transferDuration;
 
+  /// Creates the object.
   const FareAttribute({
     required this.fareId,
     required this.price,
@@ -126,7 +217,12 @@ class FareAttribute {
   });
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_attributes.txt:2
+/// {@end-tool}
 class FareAttributes extends FareCsvBinding<FareAttribute> {
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'fare_id',
@@ -182,6 +278,7 @@ class FareAttributes extends FareCsvBinding<FareAttribute> {
     ),
   ];
 
+  /// Creates the list of fare attributes.
   FareAttributes({required super.resourceFile});
 
   @override
@@ -206,13 +303,34 @@ class FareAttributes extends FareCsvBinding<FareAttribute> {
   FareVersion get version => FareVersion.one;
 }
 
+/// Rule to apply for itineraries.
 class FareRule {
+  /// {@tool placedef}
+  /// gtfs:fare_rules.txt:table:fare_id:3
+  /// {@end-tool}
   final String fareId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_rules.txt:table:route_id:3
+  /// {@end-tool}
   final String routeId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_rules.txt:table:origin_id:3
+  /// {@end-tool}
   final String originId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_rules.txt:table:destination_id:3
+  /// {@end-tool}
   final String destinationId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_rules.txt:table:contains_id:3
+  /// {@end-tool}
   final String containsId;
 
+  /// Creates the object.
   const FareRule({
     required this.fareId,
     required this.routeId,
@@ -222,9 +340,23 @@ class FareRule {
   });
 }
 
+/// {@tool placedef}
+/// gtfs:fare_rules.txt:text3
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:fare_rules.txt:listk
+/// {@end-tool}
+///
+/// {@tool placedef}
+/// gtfs:fare_rules.txt:text5
+/// {@end-tool}
 class FareRules extends FareCsvBinding<FareRule> {
+  /// Creates the list of fare rules.
   FareRules({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'fare_id',
@@ -273,31 +405,56 @@ class FareRules extends FareCsvBinding<FareRule> {
   FareVersion get version => FareVersion.one;
 }
 
+/// Describes fare media that ca nbe employed to use fare products. Fare media
+/// are physical or virtual holders used for the representation and/or
+/// validation of a fare product.
 class FareMedia {
+  /// {@tool placedef}
+  /// gtfs:fare_media.txt:table:fare_media_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:fare_media.txt:table:fare_media_name:3
+  /// {@end-tool}
   final String? name;
+
+  /// {@tool placedef}
+  /// gtfs:fare_media.txt:table:fare_media_type:3
+  /// {@end-tool}
   final FareMediaType type;
 
+  /// Creates the object.
   const FareMedia({required this.id, required this.name, required this.type});
 }
 
+/// The type of fare media.
 enum FareMediaType implements RichlyNamedEnum {
+  /// Used when there is no fare media involved in purchasing or validating a fare product, such as paying cash to a driver or conductor with no physical ticket provided.
   none(
     'None',
-    ' Used when there is no fare media involved in purchasing or validating a fare product, such as paying cash to a driver or conductor with no physical ticket provided.',
+    'Used when there is no fare media involved in purchasing or validating a fare product, such as paying cash to a driver or conductor with no physical ticket provided.',
   ),
+
+  /// Physical paper ticket that allows a passenger to take either a certain number of pre-purchased trips or unlimited trips within a fixed period of time.
   physicalPaperTicket(
     'Physical paper ticket',
     'Physical paper ticket that allows a passenger to take either a certain number of pre-purchased trips or unlimited trips within a fixed period of time.',
   ),
+
+  /// Physical transit card that has stored tickets, passes or monetary value.
   physicalTransitCard(
     'Physical transit card',
     'Physical transit card that has stored tickets, passes or monetary value.',
   ),
+
+  /// cEMV (contactless Europay, Mastercard and Visa) as an open-loop token container for account-based ticketing.
   cEMV(
     'cEMV',
     'cEMV (contactless Europay, Mastercard and Visa) as an open-loop token container for account-based ticketing.',
   ),
+
+  /// Mobile app that have stored virtual transit cards, tickets, passes, or monetary value.
   mobileApp(
     'Mobile app',
     'Mobile app that have stored virtual transit cards, tickets, passes, or monetary value.',
@@ -311,9 +468,15 @@ enum FareMediaType implements RichlyNamedEnum {
   final String description;
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_media.txt:2
+/// {@end-tool}
 class FareMedias extends FareCsvBinding<FareMedia> {
+  /// Creates the list of fare media.
   FareMedias({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'fare_media_id',
@@ -361,14 +524,41 @@ class FareMedias extends FareCsvBinding<FareMedia> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Describes a fare available for purchase by ruders or taken into account when
+/// computing the total fare for journeys with multiple legs, such as transfers
+/// costs.
 class FareProduct {
+  /// {@tool placedef}
+  /// gtfs:fare_products.txt:table:fare_product_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:fare_products.txt:table:fare_product_name:3
+  /// {@end-tool}
   final String name;
+
+  /// {@tool placedef}
+  /// gtfs:fare_products.txt:table:rider_category_id:3
+  /// {@end-tool}
   final String riderCategoryId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_products.txt:table:fare_media_id:3
+  /// {@end-tool}
   final String fareMediaId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_products.txt:table:amount:3
+  /// {@end-tool}
   final String amount;
+
+  /// {@tool placedef}
+  /// gtfs:fare_products.txt:table:currency:3
+  /// {@end-tool}
   final String currency;
 
+  /// Creates the object.
   const FareProduct({
     required this.id,
     required this.name,
@@ -379,9 +569,15 @@ class FareProduct {
   });
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_products.txt:2
+/// {@end-tool}
 class FareProducts extends FareCsvBinding<FareProduct> {
+  /// Creates the list of fare products.
   FareProducts({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'fare_product_id',
@@ -439,12 +635,29 @@ class FareProducts extends FareCsvBinding<FareProduct> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Defines a category of riders (e.g. elderly, student).
 class RiderCategory {
+  /// {@tool placedef}
+  /// gtfs:rider_categories.txt:table:rider_category_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:rider_categories.txt:table:rider_category_name:3
+  /// {@end-tool}
   final String name;
+
+  /// {@tool placedef}
+  /// gtfs:rider_categories.txt:table:is_default_fare_category:3
+  /// {@end-tool}
   final IsDefaultFareCategory isDefaultFareCategory;
+
+  /// {@tool placedef}
+  /// gtfs:rider_categories.txt:table:eligibility_url:3
+  /// {@end-tool}
   final Uri eligibilityUrl;
 
+  /// Creates the object.
   const RiderCategory({
     required this.id,
     required this.name,
@@ -453,19 +666,33 @@ class RiderCategory {
   });
 }
 
+/// Specifies if an entry in [RiderCategories] should be considered the default
+/// category (i.e. the main category that should be displayed to riders). For
+/// example: Adult fare, Regular fare, etc.
 enum IsDefaultFareCategory implements RichlyNamedEnum {
+  /// Category is not considered the default.
   notDefault('Not default', 'Category is not considered the default.'),
+
+  /// Category is considered the default one.
   ddefault('Default', 'Category is considered the default one.');
 
   const IsDefaultFareCategory(this.displayName, this.description);
 
+  @override
   final String displayName;
+  @override
   final String description;
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:rider_categories.txt:2
+/// {@end-tool}
 class RiderCategories extends FareCsvBinding<RiderCategory> {
+  /// Creates the list of rider categories.
   RiderCategories({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'rider_category_id',
@@ -516,16 +743,49 @@ class RiderCategories extends FareCsvBinding<RiderCategory> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Fare rule for individual an leg of travel.
 class FareLegRule {
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:leg_group_id:3
+  /// {@end-tool}
   final String legGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:network_id:3
+  /// {@end-tool}
   final String networkId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:from_area_id:3
+  /// {@end-tool}
   final String fromAreaId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:to_area_id:3
+  /// {@end-tool}
   final String toAreaId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:from_timeframe_group_id:3
+  /// {@end-tool}
   final String fromTimeframeGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:to_timeframe_group_id:3
+  /// {@end-tool}
   final String toTimeframeGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:fare_product_id:3
+  /// {@end-tool}
   final String fareProductId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_rules.txt:table:rule_priority:3
+  /// {@end-tool}
   final int rulePriority;
 
+  /// Creates the object.
   const FareLegRule({
     required this.legGroupId,
     required this.networkId,
@@ -538,9 +798,15 @@ class FareLegRule {
   });
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_leg_rules.txt:2
+/// {@end-tool}
 class FareLegRules extends FareCsvBinding<FareLegRule> {
+  /// Creates the list of fare leg rules.
   FareLegRules({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'leg_group_id',
@@ -613,12 +879,30 @@ class FareLegRules extends FareCsvBinding<FareLegRule> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Describe a rule which merges two consecutive legs with a transfer as a
+/// single effective fare leg.
 class FareLegJoinRule {
+  /// {@tool placedef}
+  /// gtfs:fare_leg_join_rules.txt:table:from_network_id:3
+  /// {@end-tool}
   final String fromNetworkId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_join_rules.txt:table:to_network_id:3
+  /// {@end-tool}
   final String toNetworkId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_join_rules.txt:table:from_stop_id:3
+  /// {@end-tool}
   final String fromStopId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_leg_join_rules.txt:table:to_stop_id:3
+  /// {@end-tool}
   final String toStopId;
 
+  /// Creates the object.
   const FareLegJoinRule({
     required this.fromNetworkId,
     required this.toNetworkId,
@@ -627,9 +911,15 @@ class FareLegJoinRule {
   });
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_leg_join_rules.txt:2
+/// {@end-tool}
 class FareLegJoinRules extends FareCsvBinding<FareLegJoinRule> {
+  /// Creates the list of fare leg join rules.
   FareLegJoinRules({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'from_network_id',
@@ -678,15 +968,44 @@ class FareLegJoinRules extends FareCsvBinding<FareLegJoinRule> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Fare rule for transfer between legs of travel defined in [FareLegRules].
 class FareTransferRule {
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:from_leg_group_id:3
+  /// {@end-tool}
   final String fromLegGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:to_leg_group_id:3
+  /// {@end-tool}
   final String toLegGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:transfer_count:3
+  /// {@end-tool}
   final int transferCount;
+
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:duration_limit:3
+  /// {@end-tool}
   final int durationLimit;
+
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:duration_limit_type:3
+  /// {@end-tool}
   final DurationLimitType durationLimitType;
+
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:fare_transfer_type:3
+  /// {@end-tool}
   final FareTransferType fareTransferType;
+
+  /// {@tool placedef}
+  /// gtfs:fare_transfer_rules.txt:table:fare_product_id:3
+  /// {@end-tool}
   final String fareProductId;
 
+  /// Creates the object.
   const FareTransferRule({
     required this.fromLegGroupId,
     required this.toLegGroupId,
@@ -698,19 +1017,27 @@ class FareTransferRule {
   });
 }
 
+/// Defines the relative start and end of `fare_transfer_rules.duration_limit`.
 enum DurationLimitType implements RichlyNamedEnum {
+  /// Between the departure fare validation of the current leg and the arrival fare validation of the next leg.
   departureToArrival(
     'Departure to arrival',
     'Between the departure fare validation of the current leg and the arrival fare validation of the next leg.',
   ),
+
+  /// Between the departure fare validation of the current leg and the departure fare validation of the next leg.
   departureToDeparture(
     'Departure to departure',
     'Between the departure fare validation of the current leg and the departure fare validation of the next leg.',
   ),
+
+  /// Between the arrival fare validation of the current leg and the departure fare validation of the next leg.
   arrivalToDeparture(
     'Arrival to departure',
     'Between the arrival fare validation of the current leg and the departure fare validation of the next leg.',
   ),
+
+  /// Between the arrival fare validation of the current leg and the arrival fare validation of the next leg.
   arrivalToArrival(
     'Arrival to arrival',
     'Between the arrival fare validation of the current leg and the arrival fare validation of the next leg.',
@@ -724,15 +1051,21 @@ enum DurationLimitType implements RichlyNamedEnum {
   final String description;
 }
 
+/// Indicates the cost processing method of transferring between legs in a journey
 enum FareTransferType implements RichlyNamedEnum {
+  /// From-leg fare_leg_rules.fare_product_id plus fare_transfer_rules.fare_product_id; A + AB.
   currentPlusTransfer(
     'A + AB',
     'From-leg fare_leg_rules.fare_product_id plus fare_transfer_rules.fare_product_id; A + AB.',
   ),
+
+  /// From-leg fare_leg_rules.fare_product_id plus fare_transfer_rules.fare_product_id plus to-leg fare_leg_rules.fare_product_id; A + AB + B.
   currentPlusTransferPlusNext(
     'A + AB + B',
     'From-leg fare_leg_rules.fare_product_id plus fare_transfer_rules.fare_product_id plus to-leg fare_leg_rules.fare_product_id; A + AB + B.',
   ),
+
+  /// fare_transfer_rules.fare_product_id; AB.
   transfer('AB', 'fare_transfer_rules.fare_product_id; AB.');
 
   const FareTransferType(this.displayName, this.description);
@@ -743,9 +1076,15 @@ enum FareTransferType implements RichlyNamedEnum {
   final String description;
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:fare_transfer_rules.txt:2
+/// {@end-tool}
 class FareTransferRules extends FareCsvBinding<FareTransferRule> {
+  /// Creates the list of fare transfer rules.
   FareTransferRules({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'from_leg_group_id',
@@ -828,12 +1167,29 @@ class FareTransferRules extends FareCsvBinding<FareTransferRule> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Used to describe fares that can vary based on the time of day, the day of the week, or a particular day in the year.
 class Timeframe {
+  /// {@tool placedef}
+  /// gtfs:timeframes.txt:table:timeframe_group_id:3
+  /// {@end-tool}
   final String timeframeGroupId;
+
+  /// {@tool placedef}
+  /// gtfs:timeframes.txt:table:start_time:3
+  /// {@end-tool}
   final Time startTime;
+
+  /// {@tool placedef}
+  /// gtfs:timeframes.txt:table:end_time:3
+  /// {@end-tool}
   final Time endTime;
+
+  /// {@tool placedef}
+  /// gtfs:timeframes.txt:table:service_id:3
+  /// {@end-tool}
   final String serviceId;
 
+  /// Creates the object.
   const Timeframe({
     required this.timeframeGroupId,
     required this.startTime,
@@ -842,9 +1198,15 @@ class Timeframe {
   });
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:timeframes.txt:2
+/// {@end-tool}
 class Timeframes extends FareCsvBinding<Timeframe> {
+  /// Creates the list of timeframes.
   Timeframes({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'timeframe_group_id',
@@ -891,17 +1253,32 @@ class Timeframes extends FareCsvBinding<Timeframe> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Defines a network identifier that apply for fare leg rules.
 class Network {
+  /// {@tool placedef}
+  /// gtfs:networks.txt:table:network_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:networks.txt:table:network_name:3
+  /// {@end-tool}
   final String name;
 
+  /// Creates the object.
   const Network({required this.id, required this.name});
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:networks.txt:2
+/// {@end-tool}
 class Networks extends FareCsvBinding<Network> {
+  /// Creates the list of networks.
   Networks({required super.resourceFile});
 
-  static final staticFieldDefinition = [
+  /// The list of known field definitions for the binding available for
+  /// convenience.
+  static final staticFieldDefinition = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'network_id',
       (dataset, header, fileLength) => true,
@@ -928,16 +1305,31 @@ class Networks extends FareCsvBinding<Network> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Assigns a route from [Routes] to a network.
 class RouteNetwork {
+  /// {@tool placedef}
+  /// gtfs:route_networks.txt:table:network_id:3
+  /// {@end-tool}
   final String networkId;
+
+  /// {@tool placedef}
+  /// gtfs:route_networks.txt:table:route_id:3
+  /// {@end-tool}
   final String routeId;
 
+  /// Creates the object.
   const RouteNetwork({required this.networkId, required this.routeId});
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:route_networks.txt:2
+/// {@end-tool}
 class RouteNetworks extends FareCsvBinding<RouteNetwork> {
+  /// Creates the list of route networks.
   RouteNetworks({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'network_id',
@@ -965,16 +1357,31 @@ class RouteNetworks extends FareCsvBinding<RouteNetwork> {
   FareVersion get version => FareVersion.two;
 }
 
+/// Defines an area identifier.
 class Area {
+  /// {@tool placedef}
+  /// gtfs:areas.txt:table:area_id:3
+  /// {@end-tool}
   final String id;
+
+  /// {@tool placedef}
+  /// gtfs:areas.txt:table:area_name:3
+  /// {@end-tool}
   final String name;
 
+  /// Creates the object.
   const Area({required this.id, required this.name});
 }
 
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:areas.txt:2
+/// {@end-tool}
 class Areas extends FareCsvBinding<Area> {
+  /// Creates the list of areas.
   Areas({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'area_id',
@@ -1002,11 +1409,31 @@ class Areas extends FareCsvBinding<Area> {
   FareVersion get version => FareVersion.two;
 }
 
-class StopArea {}
+/// Assigns a stop from [Stops] to an area.
+class StopArea {
+  /// {@tool placedef}
+  /// gtfs:stop_areas.txt:table:area_id:3
+  /// {@end-tool}
+  final String id;
 
+  /// {@tool placedef}
+  /// gtfs:stop_areas.txt:table:stop_id:3
+  /// {@end-tool}
+  final String stopId;
+
+  /// Creates the object.
+  const StopArea({required this.id, required this.stopId});
+}
+
+/// {@tool placedef}
+/// gtfs:2Dataset Files:table:stop_areas.txt:2
+/// {@end-tool}
 class StopAreas extends FareCsvBinding<StopArea> {
+  /// Creates the list of stop areas.
   StopAreas({required super.resourceFile});
 
+  /// The list of known field definitions for the binding available for
+  /// convenience.
   static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'area_id',
@@ -1025,7 +1452,7 @@ class StopAreas extends FareCsvBinding<StopArea> {
 
   @override
   StopArea transform(MapRecord record) => ModelBuilder.build(
-    (c) => StopArea(),
+    (c) => StopArea(id: c('area_id'), stopId: c('stop_id')),
     fieldDefinitions: staticFieldDefinitions,
     record: record,
   );

@@ -356,7 +356,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final List<FieldDefinition> staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'trip_id',
       (dataset, header, fileLength) => true,

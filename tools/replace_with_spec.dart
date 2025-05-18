@@ -36,6 +36,60 @@ const minimumTableSignatures = {
   },
 };
 
+const Map<Pattern, String> replacements = {
+  r"[agency.txt](#agencytxt)": '[Agencies]',
+  r"[stops.txt](#stopstxt)": '[Stops]',
+  r"[routes.txt](#routestxt)": '[Routes]',
+  r"[trips.txt](#tripstxt)": '[Trips]',
+  r"[stop\_times.txt](#stop_timestxt)": '[StopTimes]',
+  r"[stop_times.txt](#stop_timestxt)": '[StopTimes]',
+  r"[calendar.txt](#calendartxt)": '[RegularCalendar]',
+  r"[calenar\_dates.txt](#calendar_datestxt)": '[OccasionalCalendar]',
+  r"[calenar_dates.txt](#calendar_datestxt)": '[OccasionalCalendar]',
+  r"[fare\_attributes.txt](#fare_attributestxt)": '[FareAttributes]',
+  r"[fare_attributes.txt](#fare_attributestxt)": '[FareAttributes]',
+  r"[fare\_rules.txt](#fare_rulestxt)": '[FareRules]',
+  r"[fare_rules.txt](#fare_rulestxt)": '[FareRules]',
+  r"[timeframes.txt](#timeframestxt)": '[Timeframes]',
+  r"[rider\_categories.txt](#rider_categoriestxt)": '[Timeframes]',
+  r"[rider_categories.txt](#rider_categoriestxt)": '[Timeframes]',
+  r"[fare\_media.txt](#fare_mediatxt)": '[FareMedias]',
+  r"[fare_media.txt](#fare_mediatxt)": '[FareMedias]',
+  r"[fare\_products.txt](#fare_productstxt)": '[FareProducts]',
+  r"[fare_products.txt](#fare_productstxt)": '[FareProducts]',
+  r"[fare\_leg\_rules.txt](#fare_leg_rulestxt)": '[FareLegRules]',
+  r"[fare_leg_rules.txt](#fare_leg_rulestxt)": '[FareLegRules]',
+  r"[fare_leg_join_rules.txt](#fare_leg_join_rulestxt)": '[FareLegJoinRules]',
+  r"[fare\_transfer\_rules.txt](#fare_transfer_rulestxt)":
+      '[FareTransferRules]',
+  r"[fare_transfer_rules.txt](#fare_transfer_rulestxt)": '[FareTransferRules]',
+  r"[areas.txt](#areastxt)": '[Areas]',
+  r"[stop_areas.txt](#stop_areastxt)": '[StopAreas]',
+  r"[networks.txt](#networkstxt)": '[Networks]',
+  r"[route_networks.txt](#route_networkstxt)": '[RouteNetworks]',
+  r"[shapes.txt](#shapestxt)": '[Shapes]',
+  r"[frequencies.txt](#frequenciestxt)": '[Frequencies]',
+  r"[transfers.txt](#transferstxt)": '[Transfers]',
+  r"[pathways.txt](#pathwaystxt)": '[Pathways]',
+  r"[levels.txt](#levelstxt)": '[Levels]',
+  r"[location_groups.txt](#location_groupstxt)": '[LocationGroups]',
+  r"[location_group_stops.txt](#location_group_stopstxt)":
+      '[LocationGroupStops]',
+  r"[locations.geojson](#locationsgeojson)": '[Locations]',
+  r"[booking_rules.txt](#booking_rulestxt)": '[BookingRules]',
+  r"[translations.txt](#translationstxt)": '[Translations]',
+  r"[feed\_info.txt](#feed_infotxt)": '[FeedInfos]',
+  r"[feed_info.txt](#feed_infotxt)": '[FeedInfos]',
+  r"[attributions.txt](#attributionstxt)": '[Attributions]',
+};
+
+String replace(String initial) {
+  replacements.forEach(
+    (key, value) => initial = initial.replaceAll(key, value),
+  );
+  return initial;
+}
+
 Future<int> main(List<String> arguments) async {
   final repo = Directory(arguments[0]);
   final args = File(
@@ -51,7 +105,7 @@ Future<int> main(List<String> arguments) async {
   }
 
   if (args.isEmpty) {
-    stdout.write(spec.readAsStringSync());
+    stdout.write(replace(spec.readAsStringSync()));
   }
 
   String section = args.removeAt(0);
@@ -99,7 +153,7 @@ Future<int> main(List<String> arguments) async {
   }
 
   if (args.isEmpty) {
-    stdout.write(sectionContent);
+    stdout.write(replace(sectionContent));
     return 0;
   }
 
@@ -163,9 +217,9 @@ Future<int> main(List<String> arguments) async {
         }
 
         if (column != null) {
-          stdout.writeln(cleanedLine[column]);
+          stdout.writeln(replace(cleanedLine[column]));
         } else {
-          stdout.writeln(line);
+          stdout.writeln(replace(line));
         }
       }
     }
@@ -197,10 +251,20 @@ Future<int> main(List<String> arguments) async {
       if (currentListId == listId) {
         if (start != null && !simplifiedLine.startsWith(start)) continue;
 
-        stdout.writeln(line.substring(keepList ? 0 : 2));
+        stdout.writeln(replace(line.substring(keepList ? 0 : 2)));
 
         if (start != null) break;
       }
+    }
+  } else if (elementGroup.startsWith('text')) {
+    int paragraphId = (int.tryParse(elementGroup.substring(4)) ?? 1) - 1;
+    int currentParagraphId = 0;
+    for (final paragraph in sectionContent.split(RegExp(r'(\n|<br>){2}'))) {
+      if (currentParagraphId == paragraphId) {
+        stdout.writeln(replace(paragraph));
+        break;
+      }
+      currentParagraphId++;
     }
   }
 

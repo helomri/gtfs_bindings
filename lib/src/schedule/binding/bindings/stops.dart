@@ -599,7 +599,7 @@ class Stops extends SingleCsvLazyBinding<AStop> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final List<FieldDefinition> staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'stop_id',
       (dataset, header, fileLength) => true,

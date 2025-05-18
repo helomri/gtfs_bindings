@@ -91,7 +91,7 @@ class Agencies extends SingleCsvLazyBinding<Agency> {
 
   /// The list of known field definitions for the binding available for
   /// convenience.
-  static final List<FieldDefinition> staticFieldDefinitions = [
+  static final staticFieldDefinitions = <FieldDefinition<dynamic>>[
     FieldDefinition(
       'agency_id',
       (dataset, header, fileLength) => fileLength > 1 ? true : null,
