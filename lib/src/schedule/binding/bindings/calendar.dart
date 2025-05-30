@@ -57,7 +57,7 @@ class Date {
 
   /// Transforms into [DateTime].
   DateTime toDateTime() {
-    return DateTime(year, month, day);
+    return DateTime.utc(year, month, day);
   }
 
   /// Parses the date as YYYYMMDD.
@@ -68,6 +68,9 @@ class Date {
       int.parse(input.substring(6, 8)),
     );
   }
+
+  String toRaw() =>
+      '${year.toString().padLeft(4, '0')}${month.toString().padLeft(2, '0')}${day.toString().padLeft(2, '0')}';
 
   /// Gets the [Date] component of a [DateTime].
   factory Date.fromDatetime(DateTime dateTime) =>
@@ -186,6 +189,26 @@ class RegularService {
   bool operator ==(Object other) {
     return other is RegularService && other.hashCode == hashCode;
   }
+
+  /// Checks whether the following date is contained within the service span
+  /// period.
+  bool isWithin(Date toTest) {
+    final toTestDateTime = toTest.toDateTime();
+
+    if (toTestDateTime.isBefore(startDate.toDateTime())) return false;
+    if (toTestDateTime.isAfter(endDate.toDateTime())) return false;
+
+    return switch (toTestDateTime.weekday) {
+      DateTime.monday => monday == OperatesOnDay.available,
+      DateTime.tuesday => tuesday == OperatesOnDay.available,
+      DateTime.wednesday => wednesday == OperatesOnDay.available,
+      DateTime.thursday => thursday == OperatesOnDay.available,
+      DateTime.friday => friday == OperatesOnDay.available,
+      DateTime.saturday => saturday == OperatesOnDay.available,
+      DateTime.sunday => sunday == OperatesOnDay.available,
+      _ => false,
+    };
+  }
 }
 
 /// The type of exception for the service availability.
@@ -265,9 +288,12 @@ class Calendar {
 
   /// All dates are inclusive.
   Future<Map<Date, Set<String>>> listServicesForDateRange(
-    DateTime startDateTime,
-    DateTime endDateTime,
+    Date startDate,
+    Date endDate,
   ) async {
+    final startDateTime = startDate.toDateTime();
+    final endDateTime = endDate.toDateTime();
+
     final servicesForDays = <Date, Set<String>>{};
 
     var currentDateTime = startDateTime;
@@ -277,22 +303,26 @@ class Calendar {
       currentDateTime = currentDateTime.add(Duration(days: 1));
     }
 
-    await for (Map<String, String> service
-        in regularCalendar?.streamRawResource(
+    await for (RegularService service
+        in regularCalendar?.streamResource(
               LoadCriterion(['start_date', 'end_date'], (requestedFields) {
-                final startDate = Date.parse(requestedFields[0]!).toDateTime();
-                final endDate = Date.parse(requestedFields[1]!).toDateTime();
+                final serviceStartDate = Date.parse(
+                  requestedFields[0]!,
+                ).toDateTime();
+                final serviceEndDate = Date.parse(
+                  requestedFields[1]!,
+                ).toDateTime();
 
-                return (startDateTime.isAfter(startDate) ||
-                        startDateTime.isAtSameMomentAs(startDate)) &&
-                    (endDateTime.isBefore(endDate) ||
-                        endDateTime.isAtSameMomentAs(endDate));
+                return (serviceStartDate.isBefore(endDateTime) ||
+                        serviceStartDate.isAtSameMomentAs(endDateTime)) ||
+                    (serviceEndDate.isAfter(startDateTime) ||
+                        serviceEndDate.isAtSameMomentAs(startDateTime));
               }),
             ) ??
             Stream.empty()) {
       for (final dayToTest in servicesForDays.keys) {
-        if (service[dayToTest.weekdayToString()] == '1') {
-          servicesForDays[dayToTest]!.add(service['service_id']!);
+        if (service.isWithin(dayToTest)) {
+          servicesForDays[dayToTest]!.add(service.id);
         }
       }
     }
@@ -309,10 +339,12 @@ class Calendar {
               }),
             ) ??
             Stream.empty()) {
+      servicesForDays[occasionalService.date] ??= {};
+
       if (occasionalService.exceptionType == ExceptionType.added) {
-        servicesForDays[occasionalService.date]?.add(occasionalService.id);
+        servicesForDays[occasionalService.date]!.add(occasionalService.id);
       } else {
-        servicesForDays[occasionalService.date]?.remove(occasionalService.id);
+        servicesForDays[occasionalService.date]!.remove(occasionalService.id);
       }
     }
 
@@ -338,7 +370,7 @@ class Calendar {
           }),
         ))?.map((e) => e.id).toSet() ??
         {};
-    final rawDay = day.toString().replaceAll('/', '');
+    final rawDay = day.toRaw();
     await for (final OccasionalService occasionalService
         in occasionalCalendar?.streamResource(
               LoadCriterion([

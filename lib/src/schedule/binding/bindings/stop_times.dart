@@ -368,10 +368,9 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
       (dataset, header, fileLength) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
-        final timepoint =
-            record.containsKey('timepoint')
-                ? int.parse(record['timepoint']!)
-                : null;
+        final timepoint = record.containsKey('timepoint')
+            ? int.parse(record['timepoint']!)
+            : null;
         if (timepoint == 1) {
           return true;
         }
@@ -389,10 +388,9 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
       (dataset, header, fileLength) => null,
       type: const TimeFieldType(),
       shouldBeRequired: (dataset, header, record) {
-        final timepoint =
-            record.containsKey('timepoint')
-                ? int.parse(record['timepoint']!)
-                : null;
+        final timepoint = record.containsKey('timepoint')
+            ? int.parse(record['timepoint']!)
+            : null;
         if (timepoint == 1) {
           return true;
         }
@@ -408,31 +406,28 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
       'stop_id',
       (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Stop ID'),
-      shouldBeRequired:
-          (dataset, header, record) =>
-              !record.containsKey('location_group_id') &&
-              !record.containsKey('location_id'),
+      shouldBeRequired: (dataset, header, record) =>
+          !record.containsKey('location_group_id') &&
+          !record.containsKey('location_id'),
     ),
     FieldDefinition(
       'location_group_id',
       (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Location group ID'),
-      shouldBeRequired:
-          (dataset, header, record) =>
-              record.containsKey('stop_id') || record.containsKey('location_id')
-                  ? false
-                  : null,
+      shouldBeRequired: (dataset, header, record) =>
+          record.containsKey('stop_id') || record.containsKey('location_id')
+          ? false
+          : null,
     ),
     FieldDefinition(
       'location_id',
       (dataset, header, fileLength) => null,
       type: const IdFieldType(displayName: 'Location ID'),
-      shouldBeRequired:
-          (dataset, header, record) =>
-              record.containsKey('stop_id') ||
-                      record.containsKey('location_group_id')
-                  ? false
-                  : null,
+      shouldBeRequired: (dataset, header, record) =>
+          record.containsKey('stop_id') ||
+              record.containsKey('location_group_id')
+          ? false
+          : null,
     ),
     FieldDefinition(
       'stop_sequence',
@@ -648,8 +643,8 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     trips = await dataset.trips.listRawResource(criteria: tripCriterion);
 
     final totalActiveServices = await dataset.calendar.listServicesForDateRange(
-      now,
-      next24Hours,
+      today,
+      tomorrow,
     );
 
     for (final dayToTest in [today, tomorrow]) {
@@ -684,7 +679,7 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     LoadCriterion? tripCriterion,
     LoadCriterion? stopTimesCriterion,
   }) async {
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc();
     final today = Date.fromDatetime(now);
     final next24Hours = now.add(Duration(days: 1));
     final tomorrow = Date.fromDatetime(next24Hours);
@@ -704,8 +699,8 @@ class StopTimes extends SingleCsvLazyBinding<StopTime> {
     }
 
     final totalActiveServices = await dataset.calendar.listServicesForDateRange(
-      now,
-      next24Hours,
+      today,
+      tomorrow,
     );
 
     final List<({StopTime time, Trip trip, Date date, String routeId})>

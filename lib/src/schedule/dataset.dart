@@ -5,7 +5,9 @@ import 'package:gtfs_bindings/src/schedule/parsing/parser.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/agency.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/calendar.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/fares.dart';
+import 'package:gtfs_bindings/src/schedule/parsing/parsers/locations.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/routes.dart';
+import 'package:gtfs_bindings/src/schedule/parsing/parsers/shapes.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/stop_times.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/stops.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/parsers/trips.dart';
@@ -29,6 +31,9 @@ abstract class GtfsDataset {
   /// The list of stops.
   late Stops stops;
 
+  /// The list of shape points.
+  late Shapes? shapes;
+
   /// The list of stop times.
   late StopTimes stopTimes;
 
@@ -37,6 +42,9 @@ abstract class GtfsDataset {
 
   /// The list of fares.
   late Fares fares;
+
+  /// The list of locations.
+  late Locations? locations;
 
   /// The list of the files contained inside the dataset.
   late List<String> fileNameList;
@@ -65,8 +73,8 @@ abstract class GtfsDataset {
   List<LazyBinding> get primaryBindings => [
     agencies,
     routes,
-    if (calendar.regularCalendar != null) calendar.regularCalendar!,
-    if (calendar.occasionalCalendar != null) calendar.occasionalCalendar!,
+    ?calendar.regularCalendar,
+    ?calendar.occasionalCalendar,
     ...fares.bindings,
   ];
 
@@ -77,8 +85,9 @@ abstract class GtfsDataset {
     trips,
     stops,
     stopTimes,
-    if (calendar.regularCalendar != null) calendar.regularCalendar!,
-    if (calendar.occasionalCalendar != null) calendar.occasionalCalendar!,
+    ?calendar.regularCalendar,
+    ?calendar.occasionalCalendar,
+    ?locations,
     ...fares.bindings,
   ];
 
@@ -87,9 +96,11 @@ abstract class GtfsDataset {
     AgencyParser(),
     StopsParser(),
     RoutesParser(),
+    ShapesParser(),
     StopTimesParser(),
     TripsParser(),
     CalendarParser(),
+    LocationsParser(),
     // Must be after RoutesParser.
     FaresParser(),
   ];

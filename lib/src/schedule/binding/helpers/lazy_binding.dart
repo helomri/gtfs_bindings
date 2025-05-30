@@ -227,7 +227,7 @@ abstract class SingleCsvLazyBinding<T> extends LazyBinding<T> {
   /// The [data] that was populated by [forcePopulateAll].
   BaseCSVFile? data;
 
-  /// The base file that is used  to read parameters.
+  /// The base file used to read parameters.
   final FileOpener resourceFile;
 
   /// All the known field definitions for the CSV file.
