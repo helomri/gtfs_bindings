@@ -116,8 +116,7 @@ Stream<ListRecord> streamRecordsThroughFile(
 
   List<FieldDefinition<dynamic>>? header;
   List<int>? criterionRequestedFieldsIndices;
-  await for (final rawLine in fileStream()
-      .transform(utf8.decoder)
+  await for (final rawLine in utf8.decoder.bind(fileStream())
       .transform(
         CsvToListConverter(
           shouldParseNumbers: false,
