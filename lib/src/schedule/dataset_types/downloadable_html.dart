@@ -23,29 +23,9 @@ class DownloadableDataset extends GtfsDataset {
 
   @override
   FutureOr<List<FileOpener>> getSource({String? tempDir}) async {
-    final request = await head(uri);
-
-    String? fileName;
-    if (request.statusCode == 200) {
-      fileName = request.headers['content-disposition']!
-          .split('; ')
-          .firstWhere(
-            (element) => element.startsWith('filename='),
-            orElse: () => 'filename=${uri.path.split('/').last}',
-          )
-          .substring(9);
-    } else {
-      _logger.warning('Query URL did not accept HEAD request...');
-    }
-
     _logger.info('Downloading dataset...');
     final response = await MultipartRequest('GET', uri).send();
-
-    fileName ??= response.headers['content-disposition']!
-        .split('; ')
-        .firstWhere((element) => element.startsWith('filename='))
-        .substring(9);
-
+    
     final archive = ZipDecoder().decodeStream(
       InputMemoryStream(await response.stream.toBytes()),
     );
