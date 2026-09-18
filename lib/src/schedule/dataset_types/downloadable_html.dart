@@ -24,7 +24,7 @@ class DownloadableDataset extends GtfsDataset {
   @override
   FutureOr<List<FileOpener>> getSource({String? tempDir}) async {
     _logger.info('Downloading dataset...');
-    final response = await MultipartRequest('GET', uri).send();
+    final response = await Request('GET', uri).send();
     
     final archive = ZipDecoder().decodeStream(
       InputMemoryStream(await response.stream.toBytes()),
