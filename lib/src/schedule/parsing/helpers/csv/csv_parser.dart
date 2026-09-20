@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:csv/csv.dart';
-import 'package:csv/csv_settings_autodetection.dart';
 import 'package:gtfs_bindings/src/schedule/binding/helpers/lazy_binding.dart';
 import 'package:gtfs_bindings/src/schedule/dataset.dart';
 import 'package:gtfs_bindings/src/schedule/parsing/helpers/csv/field_definition.dart';
@@ -118,12 +117,7 @@ Stream<ListRecord> streamRecordsThroughFile(
   List<int>? criterionRequestedFieldsIndices;
   await for (final rawLine in utf8.decoder.bind(fileStream())
       .transform(
-        CsvToListConverter(
-          shouldParseNumbers: false,
-          csvSettingsDetector: FirstOccurrenceSettingsDetector(
-            eols: ['\r\n', '\n'],
-          ),
-        ),
+        csv.decoder
       )) {
     ListRecord record = ListRecord.from(rawLine);
     if (header == null) {
@@ -334,12 +328,7 @@ class ListCSVFile extends BaseCSVFile {
     await for (final rawLine in fileStream()
         .transform(utf8.decoder)
         .transform(
-          CsvToListConverter(
-            shouldParseNumbers: false,
-            csvSettingsDetector: FirstOccurrenceSettingsDetector(
-              eols: ['\r\n', '\n'],
-            ),
-          ),
+          csv.decoder,
         )) {
       ListRecord record = ListRecord.from(rawLine);
       if (header == null) {
