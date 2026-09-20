@@ -117,7 +117,7 @@ Stream<ListRecord> streamRecordsThroughFile(
   List<int>? criterionRequestedFieldsIndices;
   await for (final rawLine in utf8.decoder.bind(fileStream())
       .transform(
-        Csv(dynamicTyping: false).decoder
+        csv.decoder
       )) {
     ListRecord record = ListRecord.from(rawLine);
     if (header == null) {
@@ -328,7 +328,7 @@ class ListCSVFile extends BaseCSVFile {
     await for (final rawLine in fileStream()
         .transform(utf8.decoder)
         .transform(
-          Csv(dynamicTyping: false).decoder,
+          csv.decoder,
         )) {
       ListRecord record = ListRecord.from(rawLine);
       if (header == null) {
